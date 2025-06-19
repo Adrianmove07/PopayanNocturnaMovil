@@ -1,4 +1,4 @@
-package com.example.popayan_noc.activity;
+package com.example.popayan_noc.fragment;
 
 import android.widget.TextView;
 import android.widget.ImageView;
@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.popayan_noc.R;
+import com.example.popayan_noc.activity.LoginActivity;
 import com.example.popayan_noc.adapter.EventAdapter;
 import com.example.popayan_noc.adapter.PlaceAdapter;
 import com.example.popayan_noc.model.Lugar;

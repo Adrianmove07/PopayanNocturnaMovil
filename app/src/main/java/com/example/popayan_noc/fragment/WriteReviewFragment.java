@@ -1,4 +1,4 @@
-package com.example.popayan_noc.activity;
+package com.example.popayan_noc.fragment;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import android.widget.TextView;
 
 import com.example.popayan_noc.R;
-import com.example.popayan_noc.ReviewApi;
+import com.example.popayan_noc.service.ReviewApi;
 import com.example.popayan_noc.util.AuthUtils;
 
 public class WriteReviewFragment extends Fragment {

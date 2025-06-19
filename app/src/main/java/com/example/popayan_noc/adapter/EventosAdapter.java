@@ -16,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.popayan_noc.util.AuthUtils;
-import com.example.popayan_noc.EventApi;
+import com.example.popayan_noc.service.EventApi;
 import com.example.popayan_noc.R;
 import com.example.popayan_noc.model.Evento;
 import com.example.popayan_noc.model.Lugar;

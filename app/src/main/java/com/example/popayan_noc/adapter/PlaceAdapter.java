@@ -15,8 +15,8 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import com.example.popayan_noc.R;
-import com.example.popayan_noc.activity.ImageGalleryDialogFragment;
-import com.example.popayan_noc.activity.PlaceDetailFragment;
+import com.example.popayan_noc.fragment.ImageGalleryDialogFragment;
+import com.example.popayan_noc.fragment.PlaceDetailFragment;
 import com.example.popayan_noc.model.Lugar; // Import the new Lugar model
 import android.content.Intent;
 import android.net.Uri;

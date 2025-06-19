@@ -1,4 +1,4 @@
-package com.example.popayan_noc.activity;
+package com.example.popayan_noc.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.popayan_noc.EventApi;
+import com.example.popayan_noc.service.EventApi;
 import com.example.popayan_noc.R;
 import com.example.popayan_noc.adapter.CommentsAdapter;
 import com.example.popayan_noc.adapter.RatingsAdapter;

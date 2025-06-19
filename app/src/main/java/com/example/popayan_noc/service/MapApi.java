@@ -1,4 +1,4 @@
-package com.example.popayan_noc;
+package com.example.popayan_noc.service;
 
 import android.content.Context;
 import com.android.volley.AuthFailureError;
@@ -11,10 +11,11 @@ import org.json.JSONArray;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CategoryApi {
+public class MapApi {
     private static final String BASE_URL = "https://popnocturna.vercel.app/api";
-    public static void getCategorias(Context context, String token, Response.Listener<JSONArray> listener, Response.ErrorListener errorListener) {
-        String url = BASE_URL + "/categorias";
+
+    public static void getLugares(Context context, String token, Response.Listener<JSONArray> listener, Response.ErrorListener errorListener) {
+        String url = BASE_URL + "/lugares";
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, listener, errorListener) {
             @Override

@@ -12,6 +12,10 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.popayan_noc.R;
+import com.example.popayan_noc.fragment.ExploreFragment;
+import com.example.popayan_noc.fragment.FavoritesFragment;
+import com.example.popayan_noc.fragment.HomeFragment;
+import com.example.popayan_noc.fragment.UserFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {

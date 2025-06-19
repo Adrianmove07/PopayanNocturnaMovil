@@ -1,4 +1,4 @@
-package com.example.popayan_noc.activity;
+package com.example.popayan_noc.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

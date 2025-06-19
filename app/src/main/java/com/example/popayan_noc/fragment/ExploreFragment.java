@@ -1,4 +1,4 @@
-package com.example.popayan_noc.activity;
+package com.example.popayan_noc.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +14,7 @@ import android.view.animation.ScaleAnimation;
 
 import com.example.popayan_noc.Place;
 import com.example.popayan_noc.R;
+import com.example.popayan_noc.activity.EventosProximosActivity;
 import com.example.popayan_noc.adapter.CategoryAdapter;
 import com.example.popayan_noc.adapter.PlaceAdapter;
 import com.example.popayan_noc.adapter.SuggestionAdapter;

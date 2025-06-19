@@ -1,4 +1,4 @@
-package com.example.popayan_noc.activity;
+package com.example.popayan_noc.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,7 +17,7 @@ import java.util.List;
 
 import com.example.popayan_noc.R;
 import com.example.popayan_noc.Review;
-import com.example.popayan_noc.ReviewApi;
+import com.example.popayan_noc.service.ReviewApi;
 import com.example.popayan_noc.adapter.ReviewAdapter;
 import com.example.popayan_noc.util.AuthUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;

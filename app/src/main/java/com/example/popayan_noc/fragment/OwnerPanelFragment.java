@@ -1,4 +1,4 @@
-package com.example.popayan_noc.activity;
+package com.example.popayan_noc.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.popayan_noc.OwnerApi;
+import com.example.popayan_noc.service.OwnerApi;
 import com.example.popayan_noc.R;
 import com.example.popayan_noc.util.AuthUtils;
 

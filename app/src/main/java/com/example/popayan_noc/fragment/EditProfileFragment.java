@@ -1,4 +1,4 @@
-package com.example.popayan_noc.activity;
+package com.example.popayan_noc.fragment;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.popayan_noc.ProfileApi;
+import com.example.popayan_noc.service.ProfileApi;
 import com.example.popayan_noc.R;
 import com.example.popayan_noc.util.AuthUtils;
 

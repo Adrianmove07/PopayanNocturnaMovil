@@ -1,4 +1,4 @@
-package com.example.popayan_noc.activity;
+package com.example.popayan_noc.fragment;
 
 import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.example.popayan_noc.EventApi;
+import com.example.popayan_noc.service.EventApi;
 import com.example.popayan_noc.R;
 import com.example.popayan_noc.model.Evento;
 import com.example.popayan_noc.model.Lugar;
