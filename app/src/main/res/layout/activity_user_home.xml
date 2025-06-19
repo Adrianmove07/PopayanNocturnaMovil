@@ -13,14 +13,4 @@
         android:textStyle="bold"
         android:layout_centerInParent="true"/>
 
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cerrar sesión"
-        android:layout_below="@id/tvWelcomeUser"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp"
-        android:backgroundTint="@color/design_default_color_error"
-        android:textColor="@android:color/white"/>
 </RelativeLayout>

@@ -22,7 +22,8 @@ public class UserHomeActivity extends AppCompatActivity {
         }, 1500);
 
         // Lógica para botón de cerrar sesión
-        findViewById(R.id.btnLogout).setOnClickListener(v -> {
+
+       /* findViewById(R.id.btnLogout).setOnClickListener(v -> {
             // Si usas SharedPreferences para login, bórralos aquí
             android.content.SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
             prefs.edit().clear().apply();
@@ -31,6 +32,6 @@ public class UserHomeActivity extends AppCompatActivity {
             intent.setFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK | android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
-        });
+        });*/
     }
 }

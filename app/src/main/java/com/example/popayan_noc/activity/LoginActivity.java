@@ -18,6 +18,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.popayan_noc.R;
+import com.example.popayan_noc.util.AuthUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -144,6 +145,8 @@ public class LoginActivity extends AppCompatActivity {
             String token = response.getString("token");
             JSONObject usuario = response.getJSONObject("usuario");
             // Guarda el token y el usuario
+            AuthUtils.saveToken(this, token);;
+            AuthUtils.saveUser(this, usuario.toString());;
             SharedPreferences prefs = getSharedPreferences("popnoc_prefs", Context.MODE_PRIVATE);
             prefs.edit()
                     .putString("token", token)
