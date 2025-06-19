@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvOwnerTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Panel de Propietario"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnMyPlaces"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mis lugares"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnOwnerStats"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Estadísticas"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:id="@+id/tvMyPlacesTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="── Mis lugares ──"
+            android:textColor="@color/gold"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp"/>
+
+        <include layout="@layout/shimmer_owner_panel" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvOwnerPlaces"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:id="@+id/tvStatsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="── Estadísticas ──"
+            android:textColor="@color/gold"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/tvVisits"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Visitas este mes: 0"
+                android:textColor="@color/white"
+                android:textSize="14sp"/>
+            <TextView
+                android:id="@+id/tvRating"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Calificación promedio: 0.0"
+                android:textColor="@color/white"
+                android:textSize="14sp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvLastReviewsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Últimas reseñas:"
+            android:textColor="@color/gray"
+            android:textSize="14sp"
+            android:paddingTop="8dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvOwnerReviews"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+</ScrollView>

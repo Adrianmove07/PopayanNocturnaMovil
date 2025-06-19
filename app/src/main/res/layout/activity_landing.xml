@@ -1,0 +1,62 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="32dp"
+    android:background="@drawable/bg_gradient_dark">
+
+    <ImageView
+        android:id="@+id/logoImageView"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/logo_popayan_nocturna"
+        android:contentDescription="@string/app_logo"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="¡Bienvenido a Popayán Nocturna!"
+        android:textSize="26sp"
+        android:textColor="#F6F6F6"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="12dp"/>
+
+    <TextView
+        android:id="@+id/descText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="¡Vive la noche en Popayán! Bares, eventos y diversión en tu mano. Descubre, reserva y comparte tu experiencia."
+        android:textColor="#F6F6F6"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginBottom="30dp"/>
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Iniciar Sesión"
+        android:background="@drawable/btn_neon_dark"
+        android:textColor="#fff"
+        android:textAllCaps="false"
+        android:elevation="8dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"/>
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Registrarse"
+        android:background="@drawable/btn_outline_neon_dark"
+        android:textColor="#ffbe0b"
+        android:textAllCaps="false"
+        android:elevation="8dp"/>
+</LinearLayout>

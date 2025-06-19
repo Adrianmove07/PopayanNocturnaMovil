@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="260dp"
+    android:layout_height="320dp"
+    android:layout_marginBottom="18dp"
+    card_view:cardCornerRadius="22dp"
+    card_view:cardElevation="10dp"
+    card_view:cardBackgroundColor="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="22dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/ic_event"
+                android:contentDescription="icono evento"
+                android:tint="#3F51B5"
+                android:layout_marginEnd="16dp"/>
+
+            <TextView
+                android:id="@+id/tvEventName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nombre del evento"
+                android:textSize="20sp"
+                android:textColor="#222"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="6dp"
+            android:gravity="center_vertical">
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_calendar"
+                android:tint="#3F51B5"
+                android:contentDescription="icono calendario"
+                android:layout_marginEnd="10dp"/>
+            <TextView
+                android:id="@+id/tvEventDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha"
+                android:textSize="16sp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="#3F51B5"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnCalificar"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:text="Calificar"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/primary"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="start"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:elevation="2dp"/>
+
+        <Button
+            android:id="@+id/btnReservar"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:text="Reservar"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/primary"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="start"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:elevation="2dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ECECEC"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
+
+        <TextView
+            android:id="@+id/tvEventDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Descripción del evento"
+            android:textColor="#555"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:maxLines="5"
+            android:ellipsize="end"
+            android:layout_marginBottom="4dp"/>
+
+        <Button
+            android:id="@+id/btnComentar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Comentar"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#3F51B5"
+            android:drawableLeft="@android:drawable/ic_menu_edit"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="-10dp"
+            android:layout_gravity="center_horizontal"
+            android:elevation="4dp"
+            android:padding="8dp"
+            />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

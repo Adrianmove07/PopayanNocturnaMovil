@@ -1,0 +1,108 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient_dark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="32dp">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieLoginAnim"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            app:lottie_rawRes="@raw/login_animation"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true" />
+
+        <ImageView
+            android:id="@+id/logoImageView"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/logo_popayan_nocturna"
+            android:contentDescription="@string/app_logo"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:id="@+id/loginTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Iniciar Sesión"
+            android:textSize="24sp"
+            android:textColor="#F6F6F6"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"/>
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Correo electrónico"
+            android:inputType="textEmailAddress"
+            android:backgroundTint="#23233a"
+            android:textColor="#F6F6F6"
+            android:paddingStart="12dp"
+            android:layout_marginBottom="18dp"
+            android:background="@drawable/rounded_edittext_bg_dark"/>
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:backgroundTint="#23233a"
+            android:textColor="#F6F6F6"
+            android:paddingStart="12dp"
+            android:layout_marginBottom="18dp"
+            android:background="@drawable/rounded_edittext_bg_dark"/>
+
+        <Button
+            android:id="@+id/btnDoLogin"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Entrar"
+            android:background="@drawable/btn_neon_dark"
+            android:textColor="#fff"
+            android:textAllCaps="false"
+            android:elevation="8dp"
+            android:layout_marginBottom="14dp"
+            android:layout_marginTop="8dp"/>
+
+        <TextView
+            android:id="@+id/tvForgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Olvidaste tu contraseña?"
+            android:textColor="#ffbe0b"
+            android:textSize="15sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="18dp"
+            android:padding="4dp"/>
+
+        <TextView
+            android:id="@+id/tvGoRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿No tienes cuenta? Regístrate"
+            android:textColor="#3a86ff"
+            android:textSize="15sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="18dp"
+            android:padding="4dp"
+            android:clickable="true"
+            android:focusable="true"/>
+
+    </LinearLayout>
+</ScrollView>

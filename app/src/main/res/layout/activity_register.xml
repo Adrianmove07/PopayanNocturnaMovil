@@ -1,0 +1,126 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_gradient_dark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="32dp">
+
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/logo_popayan_nocturna"
+            android:contentDescription="@string/app_logo"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:id="@+id/registerTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registro"
+            android:textSize="24sp"
+            android:textColor="#F6F6F6"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24dp"/>
+
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Nombre completo"
+            android:backgroundTint="#23233a"
+            android:textColor="#F6F6F6"
+            android:paddingStart="12dp"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/rounded_edittext_bg_dark"/>
+
+        <EditText
+            android:id="@+id/etLastName"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Apellido(s)"
+            android:backgroundTint="#23233a"
+            android:textColor="#F6F6F6"
+            android:paddingStart="12dp"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/rounded_edittext_bg_dark"/>
+
+        <EditText
+            android:id="@+id/etBirthDate"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Fecha de nacimiento"
+            android:focusable="false"
+            android:clickable="true"
+            android:backgroundTint="#23233a"
+            android:textColor="#F6F6F6"
+            android:paddingStart="12dp"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/rounded_edittext_bg_dark"/>
+
+        <Spinner
+            android:id="@+id/spinnerGender"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="14dp"
+            android:backgroundTint="#23233a"
+            android:popupBackground="#23233a"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark"/>
+
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Correo electrónico"
+            android:inputType="textEmailAddress"
+            android:backgroundTint="#23233a"
+            android:textColor="#F6F6F6"
+            android:paddingStart="12dp"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/rounded_edittext_bg_dark"/>
+
+        <EditText
+            android:id="@+id/etPassword"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Contraseña"
+            android:inputType="textPassword"
+            android:backgroundTint="#23233a"
+            android:textColor="#F6F6F6"
+            android:paddingStart="12dp"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/rounded_edittext_bg_dark"/>
+
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Registrarse"
+            android:background="@drawable/btn_neon_dark"
+            android:textColor="#fff"
+            android:textAllCaps="false"
+            android:elevation="8dp"
+            android:layout_marginBottom="14dp"/>
+
+        <TextView
+            android:id="@+id/tvGoLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¿Ya tienes cuenta? Inicia sesión"
+            android:textColor="#3a86ff"
+            android:textSize="15sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="18dp"
+            android:padding="4dp"
+            android:clickable="true"
+            android:focusable="true"/>
+    </LinearLayout>
+</ScrollView>

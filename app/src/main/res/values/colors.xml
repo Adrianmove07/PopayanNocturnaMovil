@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="gold">#FFD700</color>
+    <color name="gray">#FF888888</color>
+    <color name="gray_300">#E0E0E0</color>
+    <color name="primary">#1976D2</color>
+    <color name="red">#F44336</color>
+    <color name="dark_blue">#182848</color>
+    <color name="dots_indicator_dot_color">#CCCCCC</color>
+    <color name="dots_indicator_selected_dot_color">#3F51B5</color>
+    <color name="primaryColor">#1976D2</color> <!-- Azul principal, igual que 'primary' existente -->
+    <color name="primaryTextColor">#23233A</color> <!-- Texto principal, oscuro -->
+    <color name="secondaryTextColor">#888888</color> <!-- Texto secundario, gris -->
+</resources>

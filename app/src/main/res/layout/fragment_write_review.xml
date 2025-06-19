@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/black"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tvWriteReviewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Escribe tu reseña"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/tvWriteReviewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reservar/Reseñar"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:gravity="center"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <RatingBar
+        android:id="@+id/rbRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:stepSize="1"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/etReviewText"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="@android:color/white"
+        android:hint="Escribe aquí tu opinión..."
+        android:textColor="@color/black"
+        android:textColorHint="@color/gray"
+        android:gravity="top|start"
+        android:padding="12dp"
+        android:inputType="textMultiLine"
+        android:maxLines="5"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnSendReview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Enviar reseña"/>
+
+</LinearLayout>

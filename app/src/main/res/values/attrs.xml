@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DotsIndicator">
+        <attr name="dotsColor" format="color" />
+        <attr name="selectedDotColor" format="color" />
+        <attr name="dotsSize" format="dimension" />
+        <attr name="dotsSpacing" format="dimension" />
+        <attr name="dotsCornerRadius" format="dimension" />
+        <attr name="dotsStrokeWidth" format="dimension" />
+        <attr name="dotsStrokeColor" format="color" />
+        <attr name="dotsClickable" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="WormDotsIndicator">
+        <attr name="wormDotColor" format="color" />
+        <attr name="wormDotSize" format="dimension" />
+    </declare-styleable>
+</resources>

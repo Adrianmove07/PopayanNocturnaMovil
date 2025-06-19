@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp">
+        <Button
+            android:id="@+id/btnFilterType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tipo"/>
+        <Button
+            android:id="@+id/btnFilterDistance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Distancia"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <include layout="@layout/shimmer_map" />
+
+    <!-- Map fragment removed: migrated to osmdroid. Add osmdroid MapView here if needed. -->
+
+</FrameLayout>

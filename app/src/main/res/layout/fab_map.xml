@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.floatingactionbutton.FloatingActionButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fabMap"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|end"
+    android:layout_margin="20dp"
+    android:src="@android:drawable/ic_menu_mapmode"
+    android:contentDescription="Ver mapa"
+    android:backgroundTint="@color/primary"
+    android:tint="@android:color/white" />

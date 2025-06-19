@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="18dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="12dp"
+    android:layout_marginEnd="12dp"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="16dp"
+    app:cardBackgroundColor="@color/white"
+    android:foreground="?attr/selectableItemBackground" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="14dp">
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp">
+
+        <!-- Aquí van los datos principales del lugar -->
+        
+
+            <ImageView
+                android:id="@+id/imgPlace"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/placeholder_img"
+                android:background="@drawable/bg_rounded_image"
+                android:clipToOutline="true"/>
+
+            <TextView
+                android:id="@+id/tvTag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Favorito entre huéspedes"
+                android:textSize="13sp"
+                android:textColor="#FFD700"
+                android:background="@drawable/bg_tag_favorite"
+                android:padding="6dp"
+                android:layout_gravity="top|start"
+                android:layout_margin="14dp"
+                android:visibility="gone"
+                android:elevation="6dp"/>
+        </FrameLayout>
+
+        <!-- Rating visual -->
+        <LinearLayout
+            android:id="@+id/layoutRating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical">
+            <RatingBar
+                android:id="@+id/ratingBar"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:numStars="5"
+                android:stepSize="0.1"
+                android:isIndicator="true"
+                android:rating="0"
+                android:scaleX="0.85"
+                android:scaleY="0.85"
+                android:progressTint="@color/gold"/>
+            <TextView
+                android:id="@+id/tvPlaceRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4.8"
+                android:textColor="#444"
+                android:textSize="14sp"
+                android:layout_marginStart="7dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="2dp">
+
+                <TextView
+                    android:id="@+id/tvPlaceName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Nombre del lugar"
+                    android:textSize="20sp"
+                    android:textColor="#23233A"
+                    android:textStyle="bold"/>
+
+                <View
+                    android:id="@+id/viewPlaceStatusIndicator"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@android:color/darker_gray" 
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvPlaceLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Popayán, Colombia"
+                android:textSize="15sp"
+                android:textColor="#888"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="6dp"/>
+
+            <TextView
+                android:id="@+id/tvPlaceDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="A 2 km de distancia"
+                android:textSize="13sp"
+                android:textColor="#888"
+                android:layout_marginTop="2dp"/>
+
+            <LinearLayout
+                android:id="@+id/llActionIcons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp"
+                android:gravity="start">
+
+                <ImageView
+                    android:id="@+id/ivGalleryIcon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@android:drawable/ic_menu_gallery" 
+                    android:contentDescription="Ver galería"
+                    android:padding="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:visibility="gone"
+                    android:layout_marginEnd="16dp"/>
+
+                <ImageView
+                    android:id="@+id/ivMenuIcon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@android:drawable/ic_menu_agenda" 
+                    android:contentDescription="Ver menú"
+                    android:padding="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:visibility="gone"
+                    android:layout_marginEnd="16dp"/>
+
+                <ImageView
+                    android:id="@+id/ivMapIcon"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@android:drawable/ic_dialog_map" 
+                    android:contentDescription="Ver en mapa"
+                    android:padding="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:visibility="gone"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvPlaceDates"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4-9 de mayo"
+                    android:textSize="13sp"
+                    android:textColor="#bbb"
+                    android:layout_marginEnd="12dp"/>
+
+                <TextView
+                    android:id="@+id/tvPlacePrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="$280.000 por noche"
+                    android:textSize="18sp"
+                    android:textColor="#23233a"
+                    android:textStyle="bold"
+                    android:layout_gravity="end"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:src="@drawable/ic_star"
+                    android:tint="#FFD700"/>
+                <TextView
+                    android:id="@+id/tvPlaceRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4.97"
+                    android:textSize="15sp"
+                    android:textColor="#23233a"
+                    android:layout_marginStart="6dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
