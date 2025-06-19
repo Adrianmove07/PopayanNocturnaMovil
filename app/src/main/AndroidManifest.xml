@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Popayan_Noc"
         tools:targetApi="31">
         <activity
-            android:name=".LandingActivity"
+            android:name=".activity.LandingActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,23 +21,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LoginActivity"
+            android:name=".activity.LoginActivity"
             android:exported="true" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activity.RegisterActivity"
             android:exported="true" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="true">
         </activity>
         <activity
-            android:name=".UserHomeActivity"
+            android:name=".activity.UserHomeActivity"
             android:exported="true" />
         <activity
-            android:name=".ValidateAccountActivity"
+            android:name=".activity.ValidateAccountActivity"
             android:exported="true" />
         <activity
-            android:name=".EventosProximosActivity"
+            android:name=".activity.EventosProximosActivity"
             android:exported="false" />
     </application>
 
