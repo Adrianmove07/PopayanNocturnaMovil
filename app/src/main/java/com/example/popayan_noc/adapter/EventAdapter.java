@@ -1,25 +1,54 @@
 package com.example.popayan_noc.adapter;
 
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.popayan_noc.R;
+import com.example.popayan_noc.model.Evento; // ¡AHORA IMPORTAMOS Evento!
 import com.example.popayan_noc.util.AuthUtils;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
-public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
-    private JSONArray eventList;
-    private Context context;
-    private android.util.SparseArray<JSONArray> commentsCache = new android.util.SparseArray<>();
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List; // Usamos List
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Scanner;
 
-    public EventAdapter(Context context, JSONArray eventList) {
+
+public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
+    private List<Evento> eventList; // ¡CAMBIO CLAVE: Ahora es List<Evento>!
+    private Context context;
+    private SparseArray<JSONArray> commentsCache = new SparseArray<>();
+
+    public EventAdapter(Context context, List<Evento> eventList) { // ¡CAMBIO CLAVE en el constructor!
         this.context = context;
         this.eventList = eventList;
     }
@@ -27,312 +56,339 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_event, parent, false);
-        // Agrega el RecyclerView de comentarios dinámicamente
-        RecyclerView rvComments = new RecyclerView(context);
-        rvComments.setId(View.generateViewId());
-        rvComments.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        ((ViewGroup) view).addView(rvComments);
-        return new EventViewHolder(view, rvComments);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_event_card, parent, false);
+        return new EventViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
-        JSONObject evento = eventList.optJSONObject(position);
-        if (evento != null) {
-            holder.tvEventName.setText(evento.optString("nombre", "Evento"));
-            holder.tvEventDate.setText(evento.optString("fecha", ""));
-            holder.tvEventDescription.setText(evento.optString("descripcion", ""));
+        Evento evento = eventList.get(position); // Obtener un objeto Evento
 
-            // --- Cargar comentarios existentes ---
-            int eventId = evento.optInt("id", 1);
-            JSONArray cached = commentsCache.get(eventId);
-            if (cached != null) {
-                holder.rvComments.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(context));
-                holder.rvComments.setAdapter(new CommentAdapter(context, cached));
+        // --- Cargar imagen del evento con Glide ---
+        // Asumiendo que el campo 'portada' en Evento es una lista de URLs y tomamos la primera
+        String imageUrl = "";
+        if (evento.getPortada() != null && !evento.getPortada().isEmpty()) {
+            imageUrl = evento.getPortada().get(0); // Tomamos la primera URL de la portada
+        }
+
+        if (!imageUrl.isEmpty()) {
+            Glide.with(context)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.placeholder_img)
+                    .error(R.drawable.placeholder_img)
+                    .centerCrop()
+                    .into(holder.imgEvent);
+        } else {
+            holder.imgEvent.setImageResource(R.drawable.placeholder_img);
+        }
+
+        // --- Actualizar TextViews con los datos del evento ---
+        holder.tvEventTitle.setText(evento.getNombre());
+
+        // Formatear fecha y hora usando getFechaHora() del modelo Evento
+        String dateTime = "";
+        try {
+            SimpleDateFormat sdfIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+            Date date = sdfIn.parse(evento.getFechaHora().replace("Z", "")); // Eliminar 'Z' si está al final
+            SimpleDateFormat sdfDateOut = new SimpleDateFormat("dd MMM", Locale.getDefault());
+            SimpleDateFormat sdfTimeOut = new SimpleDateFormat("h:mm a", Locale.getDefault()); // Formato para la hora
+            dateTime = sdfDateOut.format(Objects.requireNonNull(date)) + " • " + sdfTimeOut.format(date);
+        } catch (Exception e) {
+            dateTime = evento.getFechaHora(); // Usar la fecha tal cual si falla el formato
+            Log.e("EventAdapter", "Error al parsear fecha de Evento: " + e.getMessage());
+        }
+        holder.tvEventDateTime.setText(dateTime);
+
+        // Si Evento tiene un Lugar asociado, obtenemos la dirección de Lugar
+        if (evento.getLugar() != null) {
+
+        } else {
+            holder.tvEventLocation.setText("Ubicación no disponible");
+        }
+
+
+        // --- Cargar comentarios existentes ---
+        final int eventId = evento.getId(); // Usar getId() del objeto Evento
+        if (eventId != -1) {
+            JSONArray cachedComments = commentsCache.get(eventId);
+            if (cachedComments != null) {
+                holder.rvComments.setLayoutManager(new LinearLayoutManager(context));
+                holder.rvComments.setAdapter(new CommentAdapter(context, cachedComments));
             } else {
                 new Thread(() -> {
                     try {
-                        java.net.URL url = new java.net.URL("https://popnocturna.vercel.app/api/comentario?eventoid=" + eventId);
-                        java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
+                        URL url = new URL("https://popnocturna.vercel.app/api/comentario?eventoid=" + eventId);
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                         conn.setRequestMethod("GET");
                         conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                        java.io.InputStream is = conn.getInputStream();
-                        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-                        String response = s.hasNext() ? s.next() : "";
+                        InputStream is = conn.getInputStream();
+                        String response = new Scanner(is).useDelimiter("\\A").hasNext() ? new Scanner(is).next() : "";
                         is.close();
                         conn.disconnect();
                         JSONArray comentarios = new JSONArray(response);
                         commentsCache.put(eventId, comentarios);
-                        android.os.Handler mainHandler = new android.os.Handler(context.getMainLooper());
-                        mainHandler.post(() -> {
-                            holder.rvComments.setLayoutManager(new androidx.recyclerview.widget.LinearLayoutManager(context));
+                        new Handler(context.getMainLooper()).post(() -> {
+                            holder.rvComments.setLayoutManager(new LinearLayoutManager(context));
                             holder.rvComments.setAdapter(new CommentAdapter(context, comentarios));
                         });
                     } catch (Exception e) {
-                        // No mostrar nada si falla
+                        Log.e("EventAdapter", "Error cargando comentarios para el evento " + eventId + ": " + e.getMessage());
+                        new Handler(context.getMainLooper()).post(() -> {
+                            Toast.makeText(context, "No se pudieron cargar los comentarios.", Toast.LENGTH_SHORT).show();
+                        });
                     }
                 }).start();
             }
+        }
 
-            // --- Botón Calificar ---
-            holder.btnCalificar.setOnClickListener(v2 -> {
-                View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_rating, null);
-                android.widget.RatingBar ratingBar = dialogView.findViewById(R.id.ratingBar);
-                android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(context)
-                        .setView(dialogView)
-                        .setCancelable(false)
-                        .create();
-                dialogView.findViewById(R.id.btnCancelRating).setOnClickListener(bv -> dialog.dismiss());
-                dialogView.findViewById(R.id.btnSendRating).setOnClickListener(bv -> {
-                    int puntuacion = (int) ratingBar.getRating();
-                    if (puntuacion < 1 || puntuacion > 5) {
-                        android.widget.Toast.makeText(context, "Selecciona una puntuación de 1 a 5", android.widget.Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    dialog.dismiss();
-                    new Thread(() -> {
-                        try {
-                            java.net.URL url = new java.net.URL("https://popnocturna.vercel.app/api/calificacion");
-                            java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
-                            conn.setRequestMethod("POST");
-                            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                            String token = AuthUtils.getToken(context);
-                            if (token == null || token.isEmpty()) {
-                                android.os.Handler mainHandler = new android.os.Handler(context.getMainLooper());
-                                mainHandler.post(() -> android.widget.Toast.makeText(context, "No hay sesión activa. Inicia sesión para calificar.", android.widget.Toast.LENGTH_LONG).show());
-                                return;
-                            }
-                            conn.setRequestProperty("Authorization", "Bearer " + token);
-                            conn.setDoOutput(true);
-                            org.json.JSONObject body = new org.json.JSONObject();
-                            body.put("eventoid", eventId);
-                            body.put("puntuacion", puntuacion);
-                            java.io.OutputStream os = conn.getOutputStream();
-                            os.write(body.toString().getBytes("UTF-8"));
-                            os.close();
-                            int responseCode = conn.getResponseCode();
-                            java.io.InputStream is = (responseCode >= 200 && responseCode < 300) ? conn.getInputStream() : conn.getErrorStream();
-                            java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-                            String response = s.hasNext() ? s.next() : "";
-                            is.close();
-                            conn.disconnect();
-                            android.os.Handler mainHandler = new android.os.Handler(context.getMainLooper());
-                            mainHandler.post(() -> {
-                                if (responseCode == 201) {
-                                    android.widget.Toast.makeText(context, "¡Calificación enviada!", android.widget.Toast.LENGTH_SHORT).show();
-                                } else if (response.contains("Ya has calificado")) {
-                                    android.widget.Toast.makeText(context, "Ya has calificado este evento", android.widget.Toast.LENGTH_LONG).show();
-                                } else if (response.contains("propietario")) {
-                                    android.widget.Toast.makeText(context, "Los propietarios no pueden calificar eventos", android.widget.Toast.LENGTH_LONG).show();
-                                } else {
-                                    android.widget.Toast.makeText(context, "Error: " + response, android.widget.Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        } catch (Exception e) {
-                            android.os.Handler mainHandler = new android.os.Handler(context.getMainLooper());
-                            mainHandler.post(() -> android.widget.Toast.makeText(context, "Error al enviar calificación", android.widget.Toast.LENGTH_LONG).show());
+
+        // --- Botón Calificar ---
+        holder.btnCalificar.setOnClickListener(v2 -> {
+            if (eventId == -1) {
+                Toast.makeText(context, "ID de evento no válido para calificar.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_rating, null);
+            RatingBar ratingBar = dialogView.findViewById(R.id.ratingBar);
+            AlertDialog dialog = new AlertDialog.Builder(context)
+                    .setView(dialogView)
+                    .setCancelable(false)
+                    .create();
+            dialogView.findViewById(R.id.btnCancelRating).setOnClickListener(bv -> dialog.dismiss());
+            dialogView.findViewById(R.id.btnSendRating).setOnClickListener(bv -> {
+                int puntuacion = (int) ratingBar.getRating();
+                if (puntuacion < 1 || puntuacion > 5) {
+                    Toast.makeText(context, "Selecciona una puntuación de 1 a 5", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                dialog.dismiss();
+                new Thread(() -> {
+                    try {
+                        URL url = new URL("https://popnocturna.vercel.app/api/calificacion");
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        conn.setRequestMethod("POST");
+                        conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                        String token = AuthUtils.getToken(context);
+                        if (token == null || token.isEmpty()) {
+                            new Handler(context.getMainLooper()).post(() -> Toast.makeText(context, "No hay sesión activa. Inicia sesión para calificar.", Toast.LENGTH_LONG).show());
+                            return;
                         }
-                    }).start();
-                });
-                dialog.show();
+                        conn.setRequestProperty("Authorization", "Bearer " + token);
+                        conn.setDoOutput(true);
+                        JSONObject body = new JSONObject();
+                        body.put("eventoid", eventId);
+                        body.put("puntuacion", puntuacion);
+                        OutputStream os = conn.getOutputStream();
+                        os.write(body.toString().getBytes("UTF-8"));
+                        os.close();
+                        int responseCode = conn.getResponseCode();
+                        InputStream is = (responseCode >= 200 && responseCode < 300) ? conn.getInputStream() : conn.getErrorStream();
+                        String response = new Scanner(is).useDelimiter("\\A").hasNext() ? new Scanner(is).next() : "";
+                        is.close();
+                        conn.disconnect();
+                        new Handler(context.getMainLooper()).post(() -> {
+                            if (responseCode == 201) {
+                                Toast.makeText(context, "¡Calificación enviada!", Toast.LENGTH_SHORT).show();
+                            } else if (response.contains("Ya has calificado")) {
+                                Toast.makeText(context, "Ya has calificado este evento", Toast.LENGTH_LONG).show();
+                            } else if (response.contains("propietario")) {
+                                Toast.makeText(context, "Los propietarios no pueden calificar eventos", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(context, "Error: " + response, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    } catch (Exception e) {
+                        Log.e("EventAdapter", "Error al enviar calificación: " + e.getMessage());
+                        new Handler(context.getMainLooper()).post(() -> Toast.makeText(context, "Error al enviar calificación", Toast.LENGTH_LONG).show());
+                    }
+                }).start();
             });
+            dialog.show();
+        });
 
-            // --- Botón Reservar ---
-            // --- Ocultar botón si evento inactivo o pasado ---
-            boolean eventoInactivo = false;
-            String estadoEvento = evento.optString("estado", "activo");
-            if (!estadoEvento.equalsIgnoreCase("activo")) {
-                eventoInactivo = true;
+        // --- Botón Reservar ---
+        boolean eventoInactivo = false;
+        // Usa getEstado() del objeto Evento
+        if (!evento.getEstado().equalsIgnoreCase("activo")) {
+            eventoInactivo = true;
+        }
+
+        String fechaHoraEventoStr = evento.getFechaHora(); // Usa getFechaHora()
+        boolean eventoPasado = false;
+        if (fechaHoraEventoStr != null && !fechaHoraEventoStr.isEmpty()) {
+            try {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+                Date fechaEvento = sdf.parse(fechaHoraEventoStr.replace("Z", ""));
+                if (fechaEvento != null && fechaEvento.before(new Date())) {
+                    eventoPasado = true;
+                }
+            } catch (Exception e) {
+                Log.e("EventAdapter", "Error al parsear fecha para verificar si el evento ha pasado: " + e.getMessage());
             }
-            // Comparar fecha del evento con la fecha actual
-            String fechaEventoStr = evento.optString("fecha", "");
-            boolean eventoPasado = false;
-            if (!fechaEventoStr.isEmpty()) {
-                try {
-                    java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault());
-                    java.util.Date fechaEvento = sdf.parse(fechaEventoStr.replace("Z", ""));
-                    if (fechaEvento != null && fechaEvento.before(new java.util.Date())) {
-                        eventoPasado = true;
-                    }
-                } catch (Exception e) { /* Si hay error, no ocultar por fecha */ }
-            }
-            if (eventoInactivo || eventoPasado) {
-                holder.btnReservar.setVisibility(View.GONE);
-            } else {
-                holder.btnReservar.setVisibility(View.VISIBLE);
-                holder.btnReservar.setEnabled(true);
-                holder.btnReservar.setText("Reservar");
-                holder.btnReservar.setOnClickListener(v -> {
-                    new android.app.AlertDialog.Builder(context)
-                            .setTitle("Confirmar reserva")
-                            .setMessage("¿Deseas reservar un cupo para este evento?")
-                            .setPositiveButton("Sí", (dialog, which) -> {
-                                new Thread(() -> {
-                                    try {
-                                        java.net.URL url = new java.net.URL("https://popnocturna.vercel.app/api/reserva");
-                                        java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
-                                        conn.setRequestMethod("POST");
-                                        conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                                        String token = AuthUtils.getToken(context);
-                                        if (token == null || token.isEmpty()) {
-                                            android.os.Handler mainHandler = new android.os.Handler(context.getMainLooper());
-                                            mainHandler.post(() -> android.widget.Toast.makeText(context, "No hay sesión activa. Inicia sesión para reservar.", android.widget.Toast.LENGTH_LONG).show());
-                                            return;
-                                        }
-                                        conn.setRequestProperty("Authorization", "Bearer " + token);
-                                        conn.setDoOutput(true);
-                                        org.json.JSONObject body = new org.json.JSONObject();
-                                        body.put("eventoid", eventId);
-                                        body.put("fecha_hora", fechaEventoStr);
-                                        java.io.OutputStream os = conn.getOutputStream();
-                                        os.write(body.toString().getBytes("UTF-8"));
-                                        os.close();
-                                        int responseCode = conn.getResponseCode();
-                                        java.io.InputStream is = (responseCode >= 200 && responseCode < 300) ? conn.getInputStream() : conn.getErrorStream();
-                                        java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-                                        String response = s.hasNext() ? s.next() : "";
-                                        is.close();
-                                        conn.disconnect();
-                                        android.os.Handler mainHandler = new android.os.Handler(context.getMainLooper());
-                                        mainHandler.post(() -> {
-                                            if (responseCode == 201) {
-                                                android.widget.Toast.makeText(context, "¡Reserva realizada con éxito!", android.widget.Toast.LENGTH_SHORT).show();
-                                                holder.btnReservar.setEnabled(false);
-                                                holder.btnReservar.setText("Reservado");
-                                            } else if (response.contains("ya tienes una reserva")) {
-                                                android.widget.Toast.makeText(context, "Ya tienes una reserva para este evento", android.widget.Toast.LENGTH_LONG).show();
-                                                holder.btnReservar.setEnabled(false);
-                                                holder.btnReservar.setText("Reservado");
-                                            } else if (response.contains("no existe") || response.contains("inactivo")) {
-                                                android.widget.Toast.makeText(context, "Este evento ya no está disponible para reservas.", android.widget.Toast.LENGTH_LONG).show();
-                                                holder.btnReservar.setEnabled(false);
-                                                holder.btnReservar.setText("No disponible");
-                                            } else {
-                                                android.widget.Toast.makeText(context, "No se pudo reservar porque el evento fue eliminado o está inactivo.", android.widget.Toast.LENGTH_LONG).show();
-                                            }
-                                        });
-                                    } catch (Exception e) {
-                                        android.os.Handler mainHandler = new android.os.Handler(context.getMainLooper());
-                                        mainHandler.post(() -> android.widget.Toast.makeText(context, "Error al reservar", android.widget.Toast.LENGTH_LONG).show());
+        }
+
+        if (eventoInactivo || eventoPasado) {
+            holder.btnReservar.setVisibility(View.GONE);
+        } else {
+            holder.btnReservar.setVisibility(View.VISIBLE);
+            holder.btnReservar.setEnabled(true);
+            holder.btnReservar.setText("Reservar");
+            holder.btnReservar.setOnClickListener(v -> {
+                if (eventId == -1) {
+                    Toast.makeText(context, "ID de evento no válido para reservar.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                new AlertDialog.Builder(context)
+                        .setTitle("Confirmar reserva")
+                        .setMessage("¿Deseas reservar un cupo para este evento?")
+                        .setPositiveButton("Sí", (dialog, which) -> {
+                            new Thread(() -> {
+                                try {
+                                    URL url = new URL("https://popnocturna.vercel.app/api/reserva");
+                                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                                    conn.setRequestMethod("POST");
+                                    conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                                    String token = AuthUtils.getToken(context);
+                                    if (token == null || token.isEmpty()) {
+                                        new Handler(context.getMainLooper()).post(() -> Toast.makeText(context, "No hay sesión activa. Inicia sesión para reservar.", Toast.LENGTH_LONG).show());
+                                        return;
                                     }
-                                }).start();
-                            })
-                            .setNegativeButton("No", null)
-                            .show();
-                });
-            }
-
-            // --- Diálogo de comentar mejorado ---
-            holder.btnComentar.setOnClickListener(v -> {
-                View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_comment, null);
-                android.widget.EditText etComment = dialogView.findViewById(R.id.etComment);
-                android.widget.TextView tvCharCount = dialogView.findViewById(R.id.tvCharCount);
-                android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(context)
-                        .setView(dialogView)
-                        .setCancelable(false)
-                        .create();
-                dialogView.findViewById(R.id.btnCancel).setOnClickListener(bv -> dialog.dismiss());
-                etComment.addTextChangedListener(new android.text.TextWatcher() {
-                    @Override public void beforeTextChanged(CharSequence s, int st, int c, int a) {}
-                    @Override public void onTextChanged(CharSequence s, int st, int b, int c) {
-                        tvCharCount.setText(s.length() + "/250");
-                    }
-                    @Override public void afterTextChanged(android.text.Editable s) {}
-                });
-                dialogView.findViewById(R.id.btnSend).setOnClickListener(bv -> {
-                    String comentario = etComment.getText().toString().trim();
-                    if (comentario.isEmpty()) {
-                        etComment.setError("El comentario no puede estar vacío");
-                        return;
-                    }
-                    dialog.dismiss();
-                    // Llama al endpoint /comentario
-                    new Thread(() -> {
-                        try {
-                            java.net.URL url = new java.net.URL("https://popnocturna.vercel.app/api/comentario");
-                            java.net.HttpURLConnection conn = (java.net.HttpURLConnection) url.openConnection();
-                            conn.setRequestMethod("POST");
-                            conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                            String token = AuthUtils.getToken(context);
-                            if (token == null || token.isEmpty()) {
-                                android.os.Handler mainHandler = new android.os.Handler(context.getMainLooper());
-                                mainHandler.post(() -> android.widget.Toast.makeText(context, "No hay sesión activa. Inicia sesión para comentar.", android.widget.Toast.LENGTH_LONG).show());
-                                return;
-                            }
-                            conn.setRequestProperty("Authorization", "Bearer " + token);
-                            conn.setDoOutput(true);
-                            org.json.JSONObject body = new org.json.JSONObject();
-                            body.put("eventoid", eventId);
-                            body.put("contenido", comentario);
-                            java.io.OutputStream os = conn.getOutputStream();
-                            os.write(body.toString().getBytes("UTF-8"));
-                            os.close();
-                            int responseCode = conn.getResponseCode();
-                            java.io.InputStream is = (responseCode >= 200 && responseCode < 300) ? conn.getInputStream() : conn.getErrorStream();
-                            java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-                            String response = s.hasNext() ? s.next() : "";
-                            is.close();
-                            conn.disconnect();
-                            android.os.Handler mainHandler = new android.os.Handler(context.getMainLooper());
-                            mainHandler.post(() -> {
-                                if (responseCode == 201) {
-                                    android.widget.Toast.makeText(context, "Comentario enviado", android.widget.Toast.LENGTH_SHORT).show();
-                                    // Refresca comentarios
-                                    commentsCache.remove(eventId);
-                                    new Thread(() -> {
-                                        try {
-                                            java.net.URL url2 = new java.net.URL("https://popnocturna.vercel.app/api/comentario?eventoid=" + eventId);
-                                            java.net.HttpURLConnection conn2 = (java.net.HttpURLConnection) url2.openConnection();
-                                            conn2.setRequestMethod("GET");
-                                            conn2.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-                                            java.io.InputStream is2 = conn2.getInputStream();
-                                            java.util.Scanner s2 = new java.util.Scanner(is2).useDelimiter("\\A");
-                                            String response2 = s2.hasNext() ? s2.next() : "";
-                                            is2.close();
-                                            conn2.disconnect();
-                                            JSONArray comentarios2 = new JSONArray(response2);
-                                            commentsCache.put(eventId, comentarios2);
-                                            mainHandler.post(() -> {
-                                                holder.rvComments.setAdapter(new CommentAdapter(context, comentarios2));
-                                            });
-                                        } catch (Exception ignored) {}
-                                    }).start();
-                                } else {
-                                    android.widget.Toast.makeText(context, "Error: " + response, android.widget.Toast.LENGTH_LONG).show();
+                                    conn.setRequestProperty("Authorization", "Bearer " + token);
+                                    conn.setDoOutput(true);
+                                    JSONObject body = new JSONObject();
+                                    body.put("eventoid", eventId);
+                                    body.put("fecha_hora", fechaHoraEventoStr); // Usa la fecha original del evento
+                                    OutputStream os = conn.getOutputStream();
+                                    os.write(body.toString().getBytes("UTF-8"));
+                                    os.close();
+                                    int responseCode = conn.getResponseCode();
+                                    InputStream is = (responseCode >= 200 && responseCode < 300) ? conn.getInputStream() : conn.getErrorStream();
+                                    String response = new Scanner(is).useDelimiter("\\A").hasNext() ? new Scanner(is).next() : "";
+                                    is.close();
+                                    conn.disconnect();
+                                    new Handler(context.getMainLooper()).post(() -> {
+                                        if (responseCode == 201) {
+                                            Toast.makeText(context, "¡Reserva realizada con éxito!", Toast.LENGTH_SHORT).show();
+                                            holder.btnReservar.setEnabled(false);
+                                            holder.btnReservar.setText("Reservado");
+                                        } else if (response.contains("ya tienes una reserva")) {
+                                            Toast.makeText(context, "Ya tienes una reserva para este evento", Toast.LENGTH_LONG).show();
+                                            holder.btnReservar.setEnabled(false);
+                                            holder.btnReservar.setText("Reservado");
+                                        } else if (response.contains("no existe") || response.contains("inactivo")) {
+                                            Toast.makeText(context, "Este evento ya no está disponible para reservas.", Toast.LENGTH_LONG).show();
+                                            holder.btnReservar.setEnabled(false);
+                                            holder.btnReservar.setText("No disponible");
+                                        } else {
+                                            Toast.makeText(context, "No se pudo reservar: " + response, Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    Log.e("EventAdapter", "Error al reservar: " + e.getMessage());
+                                    new Handler(context.getMainLooper()).post(() -> Toast.makeText(context, "Error al reservar", Toast.LENGTH_LONG).show());
                                 }
-                            });
-                        } catch (Exception e) {
-                            android.os.Handler mainHandler = new android.os.Handler(context.getMainLooper());
-                            mainHandler.post(() -> android.widget.Toast.makeText(context, "Error al enviar comentario", android.widget.Toast.LENGTH_LONG).show());
-                        }
-                    }).start();
-                });
-                dialog.show();
+                            }).start();
+                        })
+                        .setNegativeButton("No", null)
+                        .show();
             });
         }
-        // Animación estándar de Android para entrada
+
+        // --- Diálogo de comentar mejorado ---
+        holder.btnComentar.setOnClickListener(v -> {
+            if (eventId == -1) {
+                Toast.makeText(context, "ID de evento no válido para comentar.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            View dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_comment, null);
+            EditText etComment = dialogView.findViewById(R.id.etComment);
+            TextView tvCharCount = dialogView.findViewById(R.id.tvCharCount);
+            AlertDialog dialog = new AlertDialog.Builder(context)
+                    .setView(dialogView)
+                    .setCancelable(false)
+                    .create();
+            dialogView.findViewById(R.id.btnCancel).setOnClickListener(bv -> dialog.dismiss());
+            etComment.addTextChangedListener(new TextWatcher() {
+                @Override public void beforeTextChanged(CharSequence s, int st, int c, int a) {}
+                @Override public void onTextChanged(CharSequence s, int st, int b, int c) {
+                    tvCharCount.setText(String.format(Locale.getDefault(), "%d/250", s.length()));
+                }
+                @Override public void afterTextChanged(Editable s) {}
+            });
+            dialogView.findViewById(R.id.btnSend).setOnClickListener(bv -> {
+                String comentario = etComment.getText().toString().trim();
+                if (comentario.isEmpty()) {
+                    etComment.setError("El comentario no puede estar vacío");
+                    return;
+                }
+                dialog.dismiss();
+                new Thread(() -> {
+                    try {
+                        URL url = new URL("https://popnocturna.vercel.app/api/comentario");
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        conn.setRequestMethod("POST");
+                        conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                        String token = AuthUtils.getToken(context);
+                        if (token == null || token.isEmpty()) {
+                            new Handler(context.getMainLooper()).post(() -> Toast.makeText(context, "No hay sesión activa. Inicia sesión para comentar.", Toast.LENGTH_LONG).show());
+                            return;
+                        }
+                        conn.setRequestProperty("Authorization", "Bearer " + token);
+                        conn.setDoOutput(true);
+                        JSONObject body = new JSONObject();
+                        body.put("eventoid", eventId);
+                        body.put("contenido", comentario);
+                        OutputStream os = conn.getOutputStream();
+                        os.write(body.toString().getBytes("UTF-8"));
+                        os.close();
+                        int responseCode = conn.getResponseCode();
+                        InputStream is = (responseCode >= 200 && responseCode < 300) ? conn.getInputStream() : conn.getErrorStream();
+                        String response = new Scanner(is).useDelimiter("\\A").hasNext() ? new Scanner(is).next() : "";
+                        is.close();
+                        conn.disconnect();
+                        new Handler(context.getMainLooper()).post(() -> {
+                            if (responseCode == 201) {
+                                Toast.makeText(context, "Comentario enviado", Toast.LENGTH_SHORT).show();
+                                commentsCache.remove(eventId);
+                                onBindViewHolder(holder, position); // Vuelve a enlazar el ViewHolder para refrescar
+                            } else {
+                                Toast.makeText(context, "Error: " + response, Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    } catch (Exception e) {
+                        Log.e("EventAdapter", "Error al enviar comentario: " + e.getMessage());
+                        new Handler(context.getMainLooper()).post(() -> Toast.makeText(context, "Error al enviar comentario", Toast.LENGTH_LONG).show());
+                    }
+                }).start();
+            });
+            dialog.show();
+        });
+
         holder.itemView.setAnimation(android.view.animation.AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left));
     }
 
     @Override
     public int getItemCount() {
-        return eventList.length();
+        return eventList.size(); // Usamos size() para List
     }
 
     public static class EventViewHolder extends RecyclerView.ViewHolder {
-        TextView tvEventName, tvEventDate, tvEventDescription;
-        android.widget.Button btnComentar;
+        ImageView imgEvent;
+        TextView tvEventTitle, tvEventDateTime, tvEventLocation;
+        Button btnComentar;
         RecyclerView rvComments;
-        android.widget.Button btnCalificar;
-        android.widget.Button btnReservar;
-        public EventViewHolder(@NonNull View itemView, RecyclerView rvComments) {
+        Button btnCalificar;
+        Button btnReservar;
+
+        public EventViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvEventName = itemView.findViewById(R.id.tvEventName);
-            tvEventDate = itemView.findViewById(R.id.tvEventDate);
-            tvEventDescription = itemView.findViewById(R.id.tvEventDescription);
+            imgEvent = itemView.findViewById(R.id.imgEvent);
+            tvEventTitle = itemView.findViewById(R.id.tvEventTitle);
+            tvEventDateTime = itemView.findViewById(R.id.tvEventDateTime);
+            tvEventLocation = itemView.findViewById(R.id.tvEventLocation);
+
             btnComentar = itemView.findViewById(R.id.btnComentar);
-            this.rvComments = rvComments;
+            rvComments = itemView.findViewById(R.id.rvComments);
             btnCalificar = itemView.findViewById(R.id.btnCalificar);
             btnReservar = itemView.findViewById(R.id.btnReservar);
         }
