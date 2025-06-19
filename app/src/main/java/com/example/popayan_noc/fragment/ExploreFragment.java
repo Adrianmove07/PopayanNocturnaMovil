@@ -59,8 +59,7 @@ public class ExploreFragment extends Fragment {
     private PlaceAdapter placeAdapter;
     private List<Lugar> allPlaces = new ArrayList<>();
     private List<Lugar> filteredPlaces = new ArrayList<>();
-    // private int selectedCategoryIndex = 0; // No longer explicitly used for filtering logic trigger
-    // Volley queue and BASE_URL removed as RetrofitClient handles this.
+
     private List<String> allSuggestions = Arrays.asList(
             "Restaurantes", "Naturaleza", "Eventos hoy", "Cultura", "Bares", "Museos", "Miradores", "Cafés", "Fiesta", "Parques"
     );
@@ -101,8 +100,7 @@ public class ExploreFragment extends Fragment {
         });
         rvCategories.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         rvCategories.setAdapter(categoryAdapter);
-        // Siempre carga categorías locales si la lista está vacía
-        categoryAdapter.setCategories(null); // fuerza categorías locales por defecto
+        categoryAdapter.setCategories(null);
 
         // Adapter de lugares (now expects List<Lugar>)
         placeAdapter = new PlaceAdapter(getContext(), filteredPlaces);
@@ -158,7 +156,7 @@ public class ExploreFragment extends Fragment {
 
     private void filterPlacesByCategory(String tipoCategoria) {
         filteredPlaces.clear();
-        if (tipoCategoria == null || tipoCategoria.isEmpty()) { // Show all if category is null/empty
+        if (tipoCategoria == null || tipoCategoria.isEmpty()) {
             if (allPlaces != null) filteredPlaces.addAll(allPlaces);
         } else {
             if (allPlaces != null) {
@@ -177,7 +175,6 @@ public class ExploreFragment extends Fragment {
 
 
 
-    // private int findCategoryIndexByTipo(String tipo) { ... } // Method removed as it's no longer directly used for core filtering logic.
 
     private void fetchPlacesAndCategories() {
         if (shimmerFrameLayout != null) showShimmer(true);

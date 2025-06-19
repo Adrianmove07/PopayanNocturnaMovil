@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        // Animación de aparición para la barra de navegación
+
         bottomNav.setVisibility(View.INVISIBLE);
         bottomNav.post(() -> {
             bottomNav.setVisibility(View.VISIBLE);
@@ -59,10 +59,10 @@ public class MainActivity extends AppCompatActivity {
             }
             getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(
-                    R.anim.slide_in_right, // enter
-                    R.anim.slide_out_left, // exit
-                    R.anim.slide_in_right, // popEnter
-                    R.anim.slide_out_left  // popExit
+                    R.anim.slide_in_right,
+                    R.anim.slide_out_left,
+                    R.anim.slide_in_right,
+                    R.anim.slide_out_left
                 )
                 .replace(R.id.main, selectedFragment)
                 .commit();

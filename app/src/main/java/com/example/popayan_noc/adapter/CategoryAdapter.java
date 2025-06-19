@@ -127,12 +127,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     private List<Category> getDefaultCategories() {
         List<Category> defaults = new ArrayList<>();
         defaults.add(new Category(0, "Comida", "", "", true));
-        defaults.add(new Category(0, "Bebida", "", "", true));
-        defaults.add(new Category(0, "Entretenimiento", "", "", true));
-        defaults.add(new Category(0, "Cultura", "", "", true));
-        defaults.add(new Category(0, "Deporte", "", "", true));
-        defaults.add(new Category(0, "Naturaleza", "", "", true));
-        defaults.add(new Category(0, "Música", "", "", true));
+
+
         return defaults;
     }
 
