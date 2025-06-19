@@ -4,93 +4,216 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/primaryTextColor"
-    android:padding="20dp">
+    android:background="@drawable/bg_gradient_dark"
+    android:padding="24dp">
 
+    <!-- Header with profile card -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="6dp"
-        android:layout_marginBottom="24dp"
-        android:layout_marginTop="16dp"
-        android:paddingBottom="16dp">
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp"
+        android:layout_marginBottom="32dp"
+        app:cardBackgroundColor="@android:color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center_horizontal"
-            android:background="@color/dots_indicator_selected_dot_color"
-            android:padding="24dp">
+            android:padding="32dp">
 
+            <!-- Profile image with border -->
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivProfilePhoto"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/ic_person"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/usuario"
                 android:scaleType="centerCrop"
                 app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
-                android:background="#E0E0E0"
-                android:padding="4dp"
-                android:layout_marginBottom="12dp"/>
+                app:strokeColor="@color/primaryColor"
+                app:strokeWidth="2dp"
+                android:layout_marginBottom="16dp"/>
 
             <TextView
                 android:id="@+id/tvProfileName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nombre Apellido del Usuario"
+                android:text="Nombre Apellido"
                 android:textColor="#333333"
-                android:textSize="24sp"
+                android:textSize="22sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:layout_marginBottom="4dp"/>
+                android:layout_marginBottom="4dp"
+                />
 
             <TextView
                 android:id="@+id/tvProfileEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="correo.electronico@dominio.com"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:gravity="center"/>
+                android:text="usuario@email.com"
+                android:textColor="#757575"
+                android:textSize="14sp"
+                android:gravity="center"
+                />
 
+            <!-- Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#EEEEEE"
+                android:layout_marginVertical="16dp"/>
+
+            <!-- Stats row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="8dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="24"
+                        android:textColor="@color/primaryColor"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Lugares"
+                        android:textColor="#757575"
+                        android:textSize="12sp"
+                      />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="12"
+
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Favoritos"
+                        android:textColor="#757575"
+                        android:textSize="12sp"
+                     />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="4.8"
+                        android:textColor="@color/primaryColor"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                       />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rating"
+                        android:textColor="#757575"
+                        android:textSize="12sp"
+                        />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <Button
-        android:id="@+id/btnEditProfile"
+    <!-- Action buttons -->
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Editar Perfil"
-        android:backgroundTint="#007BFF"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:paddingVertical="14dp"
-        android:layout_marginBottom="12dp"
-        app:cornerRadius="8dp"/>
+        app:cardCornerRadius="12dp"
+        app:cardElevation="2dp"
+        android:layout_marginBottom="16dp">
 
-    <Button
-        android:id="@+id/btnFavorites"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ver Lugares Favoritos"
-        android:backgroundTint="#28A745"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:paddingVertical="14dp"
-        android:layout_marginBottom="12dp"
-        app:cornerRadius="8dp"/>
+        <LinearLayout
+            android:background="@drawable/bg_gradient_dark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <Button
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEditProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Editar Perfil"
+                android:textColor="#333333"
+                android:textSize="15sp"
+                android:paddingVertical="16dp"
+                android:drawableStart="@drawable/ic_edit"
+                android:drawablePadding="12dp"
+                app:iconTint="@color/primaryColor"/>
+
+            <View
+
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#EEEEEE"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnFavorites"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Mis Favoritos"
+                android:textColor="#333333"
+                android:textSize="15sp"
+                android:paddingVertical="16dp"
+                android:drawableStart="@drawable/ic_favorite"
+                android:drawablePadding="12dp"
+                app:iconTint="@color/primaryColor"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Logout button -->
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnLogout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Cerrar Sesión"
-        android:backgroundTint="#DC3545"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
+        android:textColor="@color/primaryColor"
+        android:textSize="15sp"
         android:paddingVertical="14dp"
-        app:cornerRadius="8dp"/>
+        android:layout_marginTop="8dp"
+        app:strokeColor="@color/primaryColor"
+        app:strokeWidth="1dp"
+        app:cornerRadius="8dp"
+        android:backgroundTint="@android:color/transparent"
+        android:drawableStart="@drawable/ic_map"
+        android:drawablePadding="12dp"
+        app:iconTint="@color/primaryColor"/>
 
 </LinearLayout>
