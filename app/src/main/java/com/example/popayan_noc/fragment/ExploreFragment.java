@@ -206,7 +206,7 @@ public class ExploreFragment extends Fragment {
                     for (Lugar lugar : allPlaces) {
                         if (lugar.getCategoria() != null && lugar.getCategoria().getTipo() != null) {
                             if (uniqueCategoryTipos.add(lugar.getCategoria().getTipo())) {
-                                // Assuming com.example.popayan_noc.Category is the correct class for CategoryAdapter
+
                                 categoriesForAdapter.add(new com.example.popayan_noc.Category(0, lugar.getCategoria().getTipo(), "", "", false));
                             }
                         }

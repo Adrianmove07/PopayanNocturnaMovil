@@ -1,168 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/bg_gradient_dark"
-    android:paddingTop="32dp">
+    android:fillViewport="true"
+    android:background="@drawable/bg_gradient_dark">
 
-    <!-- Animación Lottie de bienvenida -->
-    <ImageView
-        android:id="@+id/imgExploreIcon"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_explore"
-        android:layout_marginTop="0dp"
-        android:layout_marginBottom="-18dp"/>
-
-    <!-- Mensaje de bienvenida -->
-    <TextView
-        android:id="@+id/tvWelcomeExplore"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="¡Explora Popayán como nunca antes!"
-        android:textColor="#F6F6F6"
-        android:textStyle="bold"
-        android:textSize="22sp"
-        android:layout_gravity="center_horizontal"
-        android:fontFamily="sans-serif-medium"
-        android:layout_marginBottom="12dp"/>
-
-    <!-- Barra de búsqueda mejorada para animación -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/card_search_bar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginStart="18dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginBottom="18dp"
-        app:cardCornerRadius="25dp"
-        app:cardElevation="8dp"
-        app:cardBackgroundColor="#F5F5F5">
-        <LinearLayout
-            android:id="@+id/search_bar_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:background="?attr/selectableItemBackground"
-            android:paddingStart="8dp"
-            android:paddingEnd="8dp">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_search"
-                android:layout_marginStart="16dp"/>
-            <EditText
-                android:id="@+id/etSearch"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="¿A dónde quieres ir?"
-                android:textColor="#23233a"
-                android:textColorHint="#888"
-                android:textSize="16sp"
-                android:paddingStart="14dp"
-                android:background="@android:color/transparent"
-                android:inputType="text"
-                android:visibility="gone"/>
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_user"
-                android:layout_marginEnd="16dp"/>
-
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Sugerencias de búsqueda -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSuggestions"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="8dp"
-        android:visibility="gone"/>
-
-    <!-- Carrusel horizontal de categorías -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvCategories"
-        android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:layout_marginBottom="12dp"
-        android:clipToPadding="false"
-        android:overScrollMode="never"
-        android:orientation="horizontal"/>
-
-    <!-- Tarjeta para acceder a Eventos Próximos -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardEventosProximos"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginBottom="12dp"
-        app:cardCornerRadius="18dp"
-        app:cardElevation="6dp"
-        android:clickable="true"
-        android:focusable="true">
+        android:orientation="vertical"
+        android:paddingTop="32dp">
+
+        <!-- ==================== -->
+        <!-- SECCIÓN DE CABECERA    -->
+        <!-- ==================== -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="18dp"
-            android:gravity="center_vertical">
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:paddingBottom="16dp">
+
+            <!-- Logo de la aplicación -->
             <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_event"
-                android:layout_marginEnd="14dp"/>
-            <LinearLayout
-                android:layout_width="0dp"
+                android:id="@+id/imgExploreIcon"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/logo_popayan_nocturna"
+                android:layout_marginBottom="-18dp"/>
+
+            <!-- Mensaje de bienvenida -->
+            <TextView
+                android:id="@+id/tvWelcomeExplore"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Eventos Próximos"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:textColor="@color/primaryTextColor"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="¡Descubre lo que viene en la ciudad!"
-                    android:textSize="14sp"
-                    android:textColor="@color/secondaryTextColor"/>
-            </LinearLayout>
+                android:text="¡Explora Popayán como nunca antes!"
+                android:textColor="#F6F6F6"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                android:fontFamily="sans-serif-medium"/>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
 
-    <!-- Shimmer Loader para lista de lugares -->
-    <include
-        layout="@layout/shimmer_placeholder"
-        android:id="@+id/shimmerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:visibility="gone" />
+        <!-- ==================== -->
+        <!-- BARRA DE BÚSQUEDA    -->
+        <!-- ==================== -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginBottom="18dp"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="#F5F5F5">
 
-    <!-- Lista de lugares -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvPlaces"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:clipToPadding="false"
-        android:overScrollMode="never"/>
+            <LinearLayout
+                android:id="@+id/search_bar_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:background="?attr/selectableItemBackground"
+                android:paddingHorizontal="8dp">
 
-</LinearLayout>
+                <!-- Icono de búsqueda -->
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_search"
+                    android:layout_marginStart="16dp"/>
+
+                <!-- Campo de búsqueda (inicialmente oculto) -->
+                <EditText
+                    android:id="@+id/etSearch"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="¿A dónde quieres ir?"
+                    android:textColor="#23233a"
+                    android:textColorHint="#888"
+                    android:textSize="16sp"
+                    android:paddingStart="14dp"
+                    android:background="@android:color/transparent"
+                    android:inputType="text"
+                    android:visibility="gone"/>
+
+                <!-- Icono de usuario -->
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_user"
+                    android:layout_marginEnd="16dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- ==================== -->
+        <!-- SUGERENCIAS (oculto inicialmente) -->
+        <!-- ==================== -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvSuggestions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"/>
+
+        <!-- ==================== -->
+        <!-- CATEGORÍAS          -->
+        <!-- ==================== -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Categorías"
+            android:textColor="#F6F6F6"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginStart="24dp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- RecyclerView de categorías con altura fija -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCategories"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:paddingHorizontal="8dp"
+            android:layout_marginBottom="12dp"
+            android:clipToPadding="false"
+            android:overScrollMode="never"/>
+
+        <!-- ==================== -->
+        <!-- ACCESO RÁPIDO       -->
+        <!-- ==================== -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Acceso rápido"
+            android:textColor="#F6F6F6"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginStart="24dp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Tarjeta de Eventos Próximos -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardEventosProximos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="18dp"
+            app:cardElevation="6dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="18dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_event"
+                    android:layout_marginEnd="14dp"/>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Eventos Próximos"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="@color/primaryTextColor"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="¡Descubre lo que viene en la ciudad!"
+                        android:textSize="14sp"
+                        android:textColor="@color/secondaryTextColor"/>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- ==================== -->
+        <!-- LISTA DE LUGARES     -->
+        <!-- ==================== -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lugares destacados"
+            android:textColor="#F6F6F6"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginStart="24dp"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Shimmer Loader (oculto inicialmente) -->
+        <include
+            layout="@layout/shimmer_placeholder"
+            android:id="@+id/shimmerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:visibility="gone" />
+
+        <!-- Lista principal de lugares - altura fija o wrap_content según necesidad -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvPlaces"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="200dp"
+            android:paddingHorizontal="8dp"
+            android:layout_marginBottom="24dp"
+            android:clipToPadding="false"
+            android:overScrollMode="never"/>
+    </LinearLayout>
+</ScrollView>
