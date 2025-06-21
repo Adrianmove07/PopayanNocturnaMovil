@@ -30,7 +30,6 @@
                 android:layout_height="120dp"
                 android:src="@drawable/usuario"
                 android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
                 app:strokeColor="@color/primaryColor"
                 app:strokeWidth="2dp"
                 android:layout_marginBottom="16dp"/>
