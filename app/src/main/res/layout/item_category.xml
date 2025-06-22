@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -9,17 +10,16 @@
     <androidx.cardview.widget.CardView
         android:layout_width="56dp"
         android:layout_height="56dp"
-        android:radius="28dp"
-        android:elevation="6dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="6dp"
         android:layout_gravity="center"
-        android:backgroundTint="#23233a">
+        app:cardBackgroundColor="#23233a">
 
         <ImageView
             android:id="@+id/imgCategoryIcon"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_category_placeholder"
             android:scaleType="centerInside"/>
     </androidx.cardview.widget.CardView>
 
@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Categoría"
-        android:textColor="#F6F6F6"
+        android:textColor="#0000"
         android:textSize="13sp"
         android:textStyle="bold"
         android:gravity="center"

@@ -13,5 +13,6 @@
     <string name="menu_slideshow">Diapositivas</string>
     <string name="menu_share">Compartir</string>
     <string name="menu_send">Enviar</string>
+    <string name="category_icon_desc">name</string>
 
 </resources>

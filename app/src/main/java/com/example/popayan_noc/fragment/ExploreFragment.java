@@ -19,32 +19,34 @@ import com.example.popayan_noc.adapter.CategoryAdapter;
 import com.example.popayan_noc.adapter.PlaceAdapter;
 import com.example.popayan_noc.adapter.SuggestionAdapter;
 import com.example.popayan_noc.util.AuthUtils;
-import com.facebook.shimmer.ShimmerFrameLayout; // Shimmer loader
+import com.example.popayan_noc.model.Categoria;
 import com.example.popayan_noc.model.Lugar;
 import com.example.popayan_noc.network.ApiService;
 import com.example.popayan_noc.network.RetrofitClient;
-import java.util.HashSet;
-import java.util.Set;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import android.util.Log;
-import android.widget.Toast; // Added for error messages
+import com.example.popayan_noc.service.CategoryApi;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.content.Intent;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import android.content.Intent;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ExploreFragment extends Fragment {
     private LinearLayout searchBarContainer;
@@ -66,7 +68,6 @@ public class ExploreFragment extends Fragment {
 
     private ShimmerFrameLayout shimmerFrameLayout;
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -79,7 +80,7 @@ public class ExploreFragment extends Fragment {
         rvPlaces = view.findViewById(R.id.rvPlaces);
         shimmerFrameLayout = view.findViewById(R.id.shimmerLayout);
 
-        // Setup suggestions list
+        // Setup suggestions
         suggestionAdapter = new SuggestionAdapter(new ArrayList<>(allSuggestions), suggestion -> {
             etSearch.setText(suggestion);
             etSearch.setSelection(suggestion.length());
@@ -89,33 +90,29 @@ public class ExploreFragment extends Fragment {
         rvSuggestions.setLayoutManager(new LinearLayoutManager(getContext()));
         rvSuggestions.setAdapter(suggestionAdapter);
 
-        // Setup horizontal categories carousel
+        // Setup categories
         categoryAdapter = new CategoryAdapter(getContext(), new ArrayList<>(), (category, position) -> {
             RecyclerView.ViewHolder viewHolder = rvCategories.findViewHolderForAdapterPosition(position);
-            if (viewHolder != null) {
-                animateCategoryClick(viewHolder);
-            }
-            android.widget.Toast.makeText(getContext(), "Categoría: " + category.tipo, android.widget.Toast.LENGTH_SHORT).show();
-            filterPlacesByCategory(category.tipo);
+            if (viewHolder != null) animateCategoryClick(viewHolder);
+            filterPlacesByCategory(category.getTipo());
         });
         rvCategories.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         rvCategories.setAdapter(categoryAdapter);
-        categoryAdapter.setCategories(null);
 
-        // Adapter de lugares (now expects List<Lugar>)
+        // Setup places
         placeAdapter = new PlaceAdapter(getContext(), filteredPlaces);
         rvPlaces.setLayoutManager(new LinearLayoutManager(getContext()));
         rvPlaces.setAdapter(placeAdapter);
 
-        // Carga categorías y lugares desde el backend usando Retrofit
-        fetchPlacesAndCategories();
-        
+        fetchPlacesAndCategories(); // carga los lugares
+        fetchCategories();          // carga las categorías reales
 
-        // Touch on search bar container shows search
+        // Search bar
         searchBarContainer.setOnClickListener(v -> {
             showSearch();
             animateSearchBarExpand(true);
         });
+
         etSearch.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 showSuggestions();
@@ -125,17 +122,16 @@ public class ExploreFragment extends Fragment {
                 animateSearchBarExpand(false);
             }
         });
-        etSearch.addTextChangedListener(new TextWatcher() {
+
+        etSearch.addTextChangedListener(new android.text.TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 filterSuggestions(s.toString());
-                if (s.length() == 0) hideSuggestions();
-                else showSuggestions();
+                if (s.length() == 0) hideSuggestions(); else showSuggestions();
             }
-            @Override public void afterTextChanged(Editable s) {}
+            @Override public void afterTextChanged(android.text.Editable s) {}
         });
 
-        // Hide search on outside touch
         view.setOnTouchListener((v, event) -> {
             if (etSearch.hasFocus()) {
                 etSearch.clearFocus();
@@ -144,7 +140,7 @@ public class ExploreFragment extends Fragment {
             return false;
         });
 
-        // Acción para la tarjeta de Eventos Próximos
+        // Ir a eventos próximos
         CardView cardEventosProximos = view.findViewById(R.id.cardEventosProximos);
         cardEventosProximos.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), EventosProximosActivity.class);
@@ -154,37 +150,14 @@ public class ExploreFragment extends Fragment {
         return view;
     }
 
-    private void filterPlacesByCategory(String tipoCategoria) {
-        filteredPlaces.clear();
-        if (tipoCategoria == null || tipoCategoria.isEmpty()) {
-            if (allPlaces != null) filteredPlaces.addAll(allPlaces);
-        } else {
-            if (allPlaces != null) {
-                for (Lugar p : allPlaces) {
-                    if (p.getCategoria() != null && tipoCategoria.equals(p.getCategoria().getTipo())) {
-                        filteredPlaces.add(p);
-                    }
-                }
-            }
-        }
-        if (placeAdapter != null) placeAdapter.notifyDataSetChanged();
-        if (filteredPlaces.isEmpty() && tipoCategoria != null && !tipoCategoria.isEmpty()) {
-             Toast.makeText(getContext(), "No hay lugares en la categoría: " + tipoCategoria, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-
-
     private void fetchPlacesAndCategories() {
         if (shimmerFrameLayout != null) showShimmer(true);
         String token = AuthUtils.getToken(getContext());
 
         if (token == null || token.isEmpty()) {
             Log.e("ExploreFragment", "Token de usuario no disponible.");
-            if (getContext() != null) Toast.makeText(getContext(), "Error de autenticación. Intente iniciar sesión de nuevo.", Toast.LENGTH_LONG).show();
-            if (shimmerFrameLayout != null) showShimmer(false);
-            // Consider navigating to login screen
+            Toast.makeText(getContext(), "Error de autenticación. Intente iniciar sesión de nuevo.", Toast.LENGTH_LONG).show();
+            showShimmer(false);
             return;
         }
 
@@ -194,59 +167,85 @@ public class ExploreFragment extends Fragment {
         call.enqueue(new Callback<List<Lugar>>() {
             @Override
             public void onResponse(Call<List<Lugar>> call, Response<List<Lugar>> response) {
-                if (shimmerFrameLayout != null) showShimmer(false);
-                if (!isAdded() || getContext() == null) return; // Fragment not attached or context is null
+                showShimmer(false);
+                if (!isAdded() || getContext() == null) return;
 
                 if (response.isSuccessful() && response.body() != null) {
                     allPlaces.clear();
                     allPlaces.addAll(response.body());
 
-                    Set<String> uniqueCategoryTipos = new HashSet<>();
-                    List<com.example.popayan_noc.Category> categoriesForAdapter = new ArrayList<>(); // Use the fully qualified name or ensure Category is imported
-                    for (Lugar lugar : allPlaces) {
-                        if (lugar.getCategoria() != null && lugar.getCategoria().getTipo() != null) {
-                            if (uniqueCategoryTipos.add(lugar.getCategoria().getTipo())) {
-
-                                categoriesForAdapter.add(new com.example.popayan_noc.Category(0, lugar.getCategoria().getTipo(), "", "", false));
-                            }
-                        }
-                    }
-                    if (categoryAdapter != null) {
-                        categoryAdapter.setCategories(categoriesForAdapter);
-                    }
-
                     filteredPlaces.clear();
-                    if (!categoriesForAdapter.isEmpty() && !allPlaces.isEmpty()) {
-                        filterPlacesByCategory(categoriesForAdapter.get(0).tipo); // Filter by the first category
-                    } else {
-                        filteredPlaces.addAll(allPlaces); // Show all if no categories or no specific filter
-                    }
-                    if (placeAdapter != null) placeAdapter.notifyDataSetChanged();
+                    filteredPlaces.addAll(allPlaces);
+                    placeAdapter.notifyDataSetChanged();
 
                     if (allPlaces.isEmpty()) {
                         Toast.makeText(getContext(), "No hay lugares disponibles.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Log.e("ExploreFragment", "Error al cargar lugares: " + response.code() + " - " + response.message());
-                    Toast.makeText(getContext(), "Error al cargar lugares. Código: " + response.code(), Toast.LENGTH_LONG).show();
-                    if (allPlaces != null) allPlaces.clear();
-                    if (filteredPlaces != null) filteredPlaces.clear();
-                    if (placeAdapter != null) placeAdapter.notifyDataSetChanged();
+                    Log.e("ExploreFragment", "Error al cargar lugares: " + response.code());
+                    Toast.makeText(getContext(), "Error al cargar lugares.", Toast.LENGTH_LONG).show();
+                    allPlaces.clear();
+                    filteredPlaces.clear();
+                    placeAdapter.notifyDataSetChanged();
                 }
             }
 
             @Override
             public void onFailure(Call<List<Lugar>> call, Throwable t) {
-                if (shimmerFrameLayout != null) showShimmer(false);
-                if (!isAdded() || getContext() == null) return; // Fragment not attached or context is null
-
-                Log.e("ExploreFragment", "Fallo en la conexión al cargar lugares: " + t.getMessage(), t);
-                Toast.makeText(getContext(), "Fallo en la conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
-                if (allPlaces != null) allPlaces.clear();
-                if (filteredPlaces != null) filteredPlaces.clear();
-                if (placeAdapter != null) placeAdapter.notifyDataSetChanged();
+                showShimmer(false);
+                Log.e("ExploreFragment", "Fallo al cargar lugares: " + t.getMessage());
+                Toast.makeText(getContext(), "Fallo en la conexión.", Toast.LENGTH_LONG).show();
+                allPlaces.clear();
+                filteredPlaces.clear();
+                placeAdapter.notifyDataSetChanged();
             }
         });
+    }
+
+    private void fetchCategories() {
+        String token = AuthUtils.getToken(getContext());
+        if (token == null || token.isEmpty()) return;
+
+        CategoryApi.getCategorias(getContext(), token, response -> {
+            List<Categoria> categorias = new ArrayList<>();
+            for (int i = 0; i < response.length(); i++) {
+                try {
+                    JSONObject obj = response.getJSONObject(i);
+                    Categoria cat = new Categoria();
+                    cat.setId(obj.getInt("id"));
+                    cat.setTipo(obj.getString("tipo"));
+                    cat.setDescripcion(obj.optString("descripcion", ""));
+                    cat.setImagen(obj.optString("imagen", null));
+                    cat.setEstado(obj.optBoolean("estado", true));
+                    categorias.add(cat);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            categoryAdapter.setCategories(categorias);
+
+            // Autofiltrar por la primera categoría (opcional)
+            if (!categorias.isEmpty()) {
+                filterPlacesByCategory(categorias.get(0).getTipo());
+            }
+
+        }, error -> {
+            Log.e("ExploreFragment", "Error al cargar categorías: " + error.getMessage());
+        });
+    }
+
+    private void filterPlacesByCategory(String tipoCategoria) {
+        filteredPlaces.clear();
+        for (Lugar lugar : allPlaces) {
+            if (lugar.getCategoria() != null && tipoCategoria.equalsIgnoreCase(lugar.getCategoria().getTipo())) {
+                filteredPlaces.add(lugar);
+            }
+        }
+        placeAdapter.notifyDataSetChanged();
+        if (filteredPlaces.isEmpty()) {
+            Toast.makeText(getContext(), "No hay lugares para la categoría: " + tipoCategoria, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void showShimmer(boolean show) {
@@ -262,14 +261,6 @@ public class ExploreFragment extends Fragment {
         }
     }
 
-    private void animatePlacesFadeIn() {
-        if (rvPlaces != null) {
-            AlphaAnimation fadeIn = new AlphaAnimation(0f, 1f);
-            fadeIn.setDuration(400);
-            rvPlaces.startAnimation(fadeIn);
-        }
-    }
-
     private void animateCategoryClick(RecyclerView.ViewHolder holder) {
         if (holder == null || holder.itemView == null) return;
         ScaleAnimation scale = new ScaleAnimation(
@@ -282,22 +273,10 @@ public class ExploreFragment extends Fragment {
         holder.itemView.startAnimation(scale);
     }
 
-    // Lugares dummy para fallback visual
-    private List<Place> getDummyPlaces() {
-        List<Place> places = new ArrayList<>();
-        places.add(new Place(1, 1, 1, "Restaurante El Sabor", "Comida típica de Popayán", "Centro", true, "", true));
-        places.add(new Place(2, 2, 1, "Bar La Noche", "Tragos y música en vivo", "Zona Rosa", true, "", true));
-        places.add(new Place(3, 3, 1, "Cine Popayán", "Estrenos y clásicos", "Centro", true, "", true));
-        places.add(new Place(4, 4, 1, "Museo de Historia", "Cultura y arte local", "Centro", true, "", true));
-        places.add(new Place(5, 6, 1, "Parque Natural", "Naturaleza y senderismo", "Sur", true, "", true));
-        return places;
-    }
-
     private void showSearch() {
         etSearch.setVisibility(View.VISIBLE);
         etSearch.requestFocus();
         showKeyboard();
-        animateSearchBarExpand(true);
     }
 
     private void animateSearchBarExpand(boolean expand) {
@@ -306,11 +285,13 @@ public class ExploreFragment extends Fragment {
         float end = expand ? 20f : 8f;
         int startHeight = cardSearchBar.getLayoutParams().height;
         int endHeight = expand ? dpToPx(62) : dpToPx(50);
+
         ValueAnimator elevationAnim = ValueAnimator.ofFloat(start, end);
         elevationAnim.setDuration(250);
         elevationAnim.addUpdateListener(animation ->
                 cardSearchBar.setCardElevation((float) animation.getAnimatedValue()));
         elevationAnim.start();
+
         ValueAnimator heightAnim = ValueAnimator.ofInt(startHeight, endHeight);
         heightAnim.setDuration(250);
         heightAnim.addUpdateListener(animation -> {
@@ -319,14 +300,6 @@ public class ExploreFragment extends Fragment {
             cardSearchBar.setLayoutParams(params);
         });
         heightAnim.start();
-        // Color highlight
-        int colorFrom = cardSearchBar.getCardBackgroundColor().getDefaultColor();
-        int colorTo = expand ? 0xFFFFFFFF : 0xFFF5F5F5;
-        ValueAnimator colorAnim = ValueAnimator.ofArgb(colorFrom, colorTo);
-        colorAnim.setDuration(250);
-        colorAnim.addUpdateListener(anim -> cardSearchBar.setCardBackgroundColor((int) anim.getAnimatedValue()));
-        colorAnim.start();
-        isSearchExpanded = expand;
     }
 
     private int dpToPx(int dp) {
@@ -340,26 +313,31 @@ public class ExploreFragment extends Fragment {
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         rvSuggestions.setLayoutParams(params);
     }
+
     private void hideSuggestions() {
         rvSuggestions.setVisibility(View.GONE);
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) rvSuggestions.getLayoutParams();
         params.height = 0;
         rvSuggestions.setLayoutParams(params);
     }
+
     private void filterSuggestions(String query) {
         List<String> filtered = new ArrayList<>();
-        for (String s : allSuggestions) if (s.toLowerCase().contains(query.toLowerCase())) filtered.add(s);
+        for (String s : allSuggestions) {
+            if (s.toLowerCase().contains(query.toLowerCase())) filtered.add(s);
+        }
         suggestionAdapter.updateSuggestions(filtered);
     }
+
     private void showKeyboard() {
         if (getActivity() == null) return;
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(etSearch, InputMethodManager.SHOW_IMPLICIT);
     }
+
     private void hideKeyboard() {
         if (getActivity() == null) return;
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(android.content.Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
     }
 }
-
