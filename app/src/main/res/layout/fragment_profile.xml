@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:gravity="center"
     android:background="@drawable/bg_gradient_dark"
     android:padding="24dp">
 
@@ -11,8 +13,10 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
         app:cardElevation="8dp"
+        app:cardCornerRadius="20dp"
         android:layout_marginBottom="32dp"
         app:cardBackgroundColor="@android:color/white">
 
@@ -30,8 +34,6 @@
                 android:layout_height="120dp"
                 android:src="@drawable/usuario"
                 android:scaleType="centerCrop"
-                app:strokeColor="@color/primaryColor"
-                app:strokeWidth="2dp"
                 android:layout_marginBottom="16dp"/>
 
             <TextView
@@ -150,67 +152,62 @@
     </androidx.cardview.widget.CardView>
 
     <!-- Action buttons -->
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="2dp"
-        android:layout_marginBottom="16dp">
+
 
         <LinearLayout
-            android:background="@drawable/bg_gradient_dark"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:gravity="center">
 
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEditProfile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="150dp"
+                android:layout_height="60dp"
                 android:text="Editar Perfil"
-                android:textColor="#333333"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/yellow_soft"
                 android:textSize="15sp"
                 android:paddingVertical="16dp"
-                android:drawableStart="@drawable/ic_edit"
                 android:drawablePadding="12dp"
-                app:iconTint="@color/primaryColor"/>
 
-            <View
+                />
 
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#EEEEEE"/>
+            <Space
+                android:layout_width="5dp"
+                android:layout_height="1dp" />
+
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnFavorites"
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="150dp"
+                android:layout_height="60dp"
                 android:text="Mis Favoritos"
-                android:textColor="#333333"
+                android:textColor="@color/black"
                 android:textSize="15sp"
                 android:paddingVertical="16dp"
-                android:drawableStart="@drawable/ic_favorite"
                 android:drawablePadding="12dp"
-                app:iconTint="@color/primaryColor"/>
+                android:backgroundTint="@color/yellow_soft"
+                />
         </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
 
     <!-- Logout button -->
     <com.google.android.material.button.MaterialButton
+
+
         android:id="@+id/btnLogout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="60dp"
         android:text="Cerrar Sesión"
-        android:textColor="@color/primaryColor"
+        android:textColor="@color/black"
         android:textSize="15sp"
         android:paddingVertical="14dp"
         android:layout_marginTop="8dp"
-        app:strokeColor="@color/primaryColor"
         app:strokeWidth="1dp"
-        app:cornerRadius="8dp"
-        android:backgroundTint="@android:color/transparent"
+        app:cornerRadius="20dp"
+        android:backgroundTint="@color/yellow_primary"
         android:drawableStart="@drawable/ic_map"
         android:drawablePadding="12dp"
         app:iconTint="@color/primaryColor"/>

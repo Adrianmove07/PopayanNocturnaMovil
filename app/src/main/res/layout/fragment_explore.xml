@@ -36,7 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="¡Explora Popayán como nunca antes!"
-                android:textColor="#F6F6F6"
+                android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="22sp"
                 android:fontFamily="sans-serif-medium"/>
@@ -53,7 +53,7 @@
             android:layout_marginBottom="18dp"
             app:cardCornerRadius="25dp"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="#F5F5F5">
+            app:cardBackgroundColor="@color/light_gray_2">
 
             <LinearLayout
                 android:id="@+id/search_bar_container"
@@ -113,7 +113,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Categorías"
-            android:textColor="#F6F6F6"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginStart="24dp"
@@ -136,7 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Acceso rápido"
-            android:textColor="#F6F6F6"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginStart="24dp"
@@ -198,7 +198,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Lugares destacados"
-            android:textColor="#F6F6F6"
+            android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_marginStart="24dp"

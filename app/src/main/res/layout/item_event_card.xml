@@ -9,7 +9,7 @@
     android:layout_marginBottom="16dp"
     app:cardCornerRadius="12dp"
     app:cardElevation="4dp"
-    app:cardBackgroundColor="#2c394b">
+    app:cardBackgroundColor="@color/amber_tint">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Concierto de Rock en Popayán"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:maxLines="2"

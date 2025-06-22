@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient_dark"
-    tools:context=".activity.MainActivity"> <LinearLayout
+    tools:context=".activity.MainActivity">
+    <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -20,6 +21,7 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:src="@drawable/logo_popayan_nocturna"
+            android:alpha="0.4"
             android:contentDescription="Imagen de bienvenida de Popayán nocturna" />
 
         <View
@@ -71,9 +73,9 @@
         android:layout_marginEnd="16dp"
         app:tabMode="fixed"
         app:tabGravity="fill"
-        app:tabTextColor="@color/white_50_opacity"
-        app:tabSelectedTextColor="@android:color/white"
-        app:tabIndicatorColor="@color/tab_indicator_color"
+        app:tabTextColor="@color/black"
+        app:tabSelectedTextColor="@android:color/black"
+        app:tabIndicatorColor="@color/black"
         app:tabIndicatorHeight="3dp"
         android:background="@android:color/transparent">
 
@@ -108,7 +110,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🎉 Eventos Destacados"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp" />
@@ -122,8 +124,8 @@
                 android:paddingBottom="8dp"
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_event_card"
-                /> <TextView
+                tools:listitem="@layout/item_event_card"/>
+            <TextView
             android:id="@+id/tvNoEvents"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -150,7 +152,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="📍 Lugares Destacados"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:layout_marginBottom="12dp" />
@@ -192,7 +194,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="💡 ¿Qué es Popayán Nocturna?"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold"/>
         <TextView
@@ -216,7 +218,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="💬 Lo que dicen nuestros usuarios"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="18sp"
             android:textStyle="bold"/>
         <TextView
@@ -255,7 +257,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="32sp"
                 android:textStyle="bold" />
             <TextView
@@ -277,7 +279,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="32sp"
                 android:textStyle="bold" />
             <TextView
@@ -299,7 +301,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="4.9"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="32sp"
                 android:textStyle="bold" />
             <TextView
@@ -310,17 +312,6 @@
                 android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnLogout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cerrar sesión"
-        android:layout_gravity="center"
-        android:layout_marginTop="24dp"
-        android:layout_marginBottom="24dp"
-        android:backgroundTint="@color/red_logout"
-        android:textColor="@android:color/white"/>
 
 </LinearLayout>
 </ScrollView>

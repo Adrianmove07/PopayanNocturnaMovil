@@ -22,12 +22,15 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#1a1a2e"
+            android:background="@color/white"
             android:layout_marginTop="24dp"
+            android:titleTextColor="@color/white"
+            android:subtitleTextColor="@color/light_gray"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
 
 
         <FrameLayout
@@ -43,9 +46,9 @@
             android:id="@+id/bottom_navigation"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/black"
-            app:itemIconTint="@color/accent_yellow_darker"
-            app:itemTextColor="@color/white"
+            android:background="@color/white"
+            app:itemIconTint="@color/black"
+            app:itemTextColor="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
