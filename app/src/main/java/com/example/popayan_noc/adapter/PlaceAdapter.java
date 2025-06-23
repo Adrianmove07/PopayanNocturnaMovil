@@ -139,7 +139,7 @@ public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHol
             holder.ivMapIcon.setVisibility(View.GONE);
         }
 
-        // --- FIN: Lógica para nuevos elementos UI ---
+
 
         // Listener para abrir PlaceDetailFragment con argumentos del nuevo modelo Lugar
         holder.cardView.setOnClickListener(v -> {

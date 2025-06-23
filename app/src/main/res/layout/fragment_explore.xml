@@ -53,7 +53,7 @@
             android:layout_marginBottom="18dp"
             app:cardCornerRadius="25dp"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/light_gray_2">
+            app:cardBackgroundColor="@color/white">
 
             <LinearLayout
                 android:id="@+id/search_bar_container"
@@ -152,6 +152,7 @@
             app:cardCornerRadius="18dp"
             app:cardElevation="6dp"
             android:clickable="true"
+            app:cardBackgroundColor="@color/white"
             android:focusable="true">
 
             <LinearLayout
@@ -165,29 +166,26 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:src="@drawable/ic_event"
-                    android:layout_marginEnd="14dp"/>
-
+                    android:layout_marginEnd="14dp"
+                    app:tint="@color/primaryColor" />
                 <LinearLayout
-                    android:layout_width="0dp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Eventos Próximos"
-                        android:textStyle="bold"
-                        android:textSize="18sp"
-                        android:textColor="@color/primaryTextColor"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="¡Descubre lo que viene en la ciudad!"
-                        android:textSize="14sp"
-                        android:textColor="@color/secondaryTextColor"/>
-                </LinearLayout>
+                    android:text="Eventos Próximos"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="@color/primaryTextColor"/> <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="¡Descubre lo que viene en la ciudad!"
+                android:textSize="14sp"
+                android:textColor="@color/primaryTextColor"/> </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

@@ -34,7 +34,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager; // Ensure this is imported
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
@@ -101,7 +101,9 @@ public class ExploreFragment extends Fragment {
 
         // Setup places
         placeAdapter = new PlaceAdapter(getContext(), filteredPlaces);
-        rvPlaces.setLayoutManager(new LinearLayoutManager(getContext()));
+        // --- THIS IS THE CHANGE ---
+        rvPlaces.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        // --- END OF CHANGE ---
         rvPlaces.setAdapter(placeAdapter);
 
         fetchPlacesAndCategories(); // carga los lugares
