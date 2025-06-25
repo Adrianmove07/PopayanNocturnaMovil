@@ -1,5 +1,7 @@
 package com.example.popayan_noc.activity;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 
 import android.annotation.SuppressLint;
@@ -13,6 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.popayan_noc.R;
 import com.example.popayan_noc.util.AuthUtils;
+import com.google.firebase.Firebase;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 
 @SuppressLint("CustomSplashScreen")
@@ -24,10 +29,23 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FirebaseApp.initializeApp(this);
         setContentView(R.layout.activity_splash);
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                        return;
+                    }
+                    String token = task.getResult();
+                    AuthUtils.saveTokenDevice(this, token);
+                    Log.d(TAG, "Token actual: " + token);
+                });
 
         String token = AuthUtils.getToken(this);
         Object user = AuthUtils.getUser(this);
+
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -92,25 +92,28 @@ public class LoginActivity extends AppCompatActivity {
                 tvGoRegister.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_up));
                 tvGoRegister.animate().alpha(1f).setDuration(300);
                 tvForgotPassword.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_up));
-                tvForgotPassword.animate().alpha(1f).setDuration(300);
+                    tvForgotPassword.animate().alpha(1f).setDuration(300);
+                });
             });
-        });
-    }
+        }
 
-    private void attemptLogin() {
-        String email = etEmail.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
+        private void attemptLogin() {
+            String email = etEmail.getText().toString().trim();
+            String password = etPassword.getText().toString().trim();
 
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        String token_device = AuthUtils.getTokenDevice(this);
 
         progressDialog.show();
         JSONObject body = new JSONObject();
         try {
             body.put("correo", email);
             body.put("contrasena", password);
+            body.put("device_token", token_device);
         } catch (JSONException e) {
             e.printStackTrace();
             progressDialog.dismiss();

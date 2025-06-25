@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "492633255386",
+    "project_id": "nocturnapopayan-7af8a",
+    "storage_bucket": "nocturnapopayan-7af8a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:492633255386:android:464907e55e0b35775ba4e3",
+        "android_client_info": {
+          "package_name": "com.example.popayan_noc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsBKTsGY1yqZNnEkAV4vAAFAk-XhOCuQ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
