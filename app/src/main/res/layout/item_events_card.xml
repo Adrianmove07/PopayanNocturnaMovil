@@ -16,11 +16,11 @@
         android:paddingBottom="8dp">
 
         <ImageView
-            android:id="@+id/imgEventCover"
+            android:id="@+id/imageViewPortada"
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_category_apps"
+            android:src="@drawable/logo_popayan_nocturna"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +39,7 @@
             android:textColor="@color/black"
             android:maxLines="1"
             android:ellipsize="end"
-            app:layout_constraintTop_toBottomOf="@id/imgEventCover"
+            app:layout_constraintTop_toBottomOf="@id/imageViewPortada"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -73,7 +73,27 @@
             android:textColor="@color/dark_blue"
             android:maxLines="1"
             android:ellipsize="end"
-            app:drawableStartCompat="@drawable/ic_calendar" app:layout_constraintTop_toBottomOf="@id/tvEventDescription"
+            app:drawableStartCompat="@drawable/ic_calendar"
+            app:layout_constraintTop_toBottomOf="@id/tvEventDescription"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/tvEventPlace"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="16dp"
+            android:drawablePadding="4dp"
+            android:gravity="center_vertical"
+            android:text="Lugar: La Terraza del Chef"
+            android:textSize="13sp"
+            android:textColor="@color/dark_blue"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:drawableStartCompat="@drawable/ic_map"
+            app:layout_constraintTop_toBottomOf="@id/tvEventDateTime"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -92,8 +112,8 @@
             android:textColor="@color/black"
             android:maxLines="1"
             android:ellipsize="end"
-            app:drawableStartCompat="@drawable/ic_category_apps"
-            app:layout_constraintTop_toBottomOf="@id/tvEventDateTime"
+            app:drawableStartCompat="@drawable/ic_favorite"
+            app:layout_constraintTop_toBottomOf="@id/tvEventPlace"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

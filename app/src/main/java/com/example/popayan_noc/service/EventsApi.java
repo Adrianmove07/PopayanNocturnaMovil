@@ -26,7 +26,7 @@ public class EventsApi {
      * @param listener Listener para la respuesta exitosa.
      * @param errorListener Listener para errores.
      */
-    public static void getEventosByLugar(Context context, String token, int lugarId,
+    public static void getEventosByLugares(Context context, String token, int lugarId,
                                          Response.Listener<JSONObject> listener,
                                          Response.ErrorListener errorListener) {
         String url = BASE_URL + "/lugares/" + lugarId + "/eventos";

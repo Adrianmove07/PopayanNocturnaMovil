@@ -68,6 +68,7 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
         } else {
             Log.e(TAG, "EventsListFragment started without place ID or name arguments.");
         }
+        // Obtén el token al inicio. Asegúrate de que AuthUtils.getToken(getContext()) no devuelva null o vacío.
         authToken = AuthUtils.getToken(getContext());
     }
 
@@ -92,17 +93,19 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
         eventCardAdapter = new EventCardAdapter(getContext(), eventList, this);
         rvEventsList.setAdapter(eventCardAdapter);
 
+        // Llama a cargar eventos después de inicializar el adaptador
         loadEventsByPlace(placeId);
 
         return view;
     }
 
     private void loadEventsByPlace(int placeId) {
+        // Asegúrate de que el contexto y el token sean válidos antes de hacer la llamada.
         if (getContext() == null || authToken == null || authToken.isEmpty()) {
             Log.e(TAG, "Contexto nulo o token no válido. No se pueden cargar eventos.");
             Toast.makeText(getContext(), "Error: Token de autorización no disponible.", Toast.LENGTH_LONG).show();
             progressBarEvents.setVisibility(View.GONE);
-            tvNoEventsMessage.setVisibility(View.VISIBLE);
+            tvNoEventsMessage.setVisibility(View.VISIBLE); // Mostrar mensaje si no hay token
             return;
         }
 
@@ -110,9 +113,9 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
         rvEventsList.setVisibility(View.GONE);
         tvNoEventsMessage.setVisibility(View.GONE);
 
-        Log.d(TAG, "Cargando eventos para lugar ID: " + placeId);
+        Log.d(TAG, "Cargando eventos para lugar ID: " + placeId + " con token: " + authToken);
 
-        EventsApi.getEventosByLugar(getContext(), authToken, placeId,
+        EventsApi.getEventosByLugares(getContext(), authToken, placeId,
                 new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -135,32 +138,34 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
                                     boolean estado = eventObject.getBoolean("estado");
                                     int usuarioid = eventObject.getInt("usuarioid");
 
-                                    List<String> portadaUrls = new ArrayList<>(); // Usaremos esta lista directamente
+                                    // --- INICIO DE LA CORRECCIÓN PARA EL CAMPO 'portada' ---
+                                    List<String> portadaUrls = new ArrayList<>();
                                     if (eventObject.has("portada") && !eventObject.isNull("portada")) {
-                                        if (eventObject.get("portada") instanceof JSONArray) {
-                                            JSONArray portadaJsonArray = eventObject.getJSONArray("portada");
+                                        Object portadaValue = eventObject.get("portada"); // <-- This line gets it as a generic Object
+                                        if (portadaValue instanceof JSONArray) { // <-- Then checks if it's a JSONArray
+                                            JSONArray portadaJsonArray = (JSONArray) portadaValue;
                                             for (int j = 0; j < portadaJsonArray.length(); j++) {
                                                 String url = portadaJsonArray.getString(j);
                                                 if (url != null && !url.isEmpty()) {
-                                                    portadaUrls.add(url); // Añadimos cada URL del array JSON
+                                                    portadaUrls.add(url);
                                                 }
                                             }
-                                        } else if (eventObject.get("portada") instanceof String) {
-                                            // Si por alguna razón la API envía un solo string directamente (y no un array JSON)
-                                            String singleUrl = eventObject.getString("portada");
+                                        } else if (portadaValue instanceof String) { // <-- And also tries to handle it as a String
+                                            // Manejar el caso si 'portada' es directamente un String (aunque el API actual lo envía como array)
+                                            String singleUrl = (String) portadaValue;
                                             if (singleUrl != null && !singleUrl.isEmpty()) {
                                                 portadaUrls.add(singleUrl);
                                             }
                                         }
                                     }
-                                    // La lista 'portadaUrls' ya está lista para pasarse al constructor de Events
+// --- FIN DE LA CORRECCIÓN ---
 
                                     JSONObject lugarObj = eventObject.getJSONObject("lugar");
                                     int lugarIdAnidado = lugarObj.getInt("id");
                                     String lugarNombreAnidado = lugarObj.getString("nombre");
                                     Events.LugarSimple lugarSimple = new Events.LugarSimple(lugarIdAnidado, lugarNombreAnidado);
 
-                                    fetchedEvents.add(new Events(id, nombre, capacidad, precio, descripcion, fechaHora, estado, usuarioid, portadaUrls, lugarSimple)); // Pasamos portadaUrls directamente
+                                    fetchedEvents.add(new Events(id, nombre, capacidad, precio, descripcion, fechaHora, estado, usuarioid, portadaUrls, lugarSimple));
                                 }
                                 eventCardAdapter.setEvents(fetchedEvents);
                                 rvEventsList.setVisibility(View.VISIBLE);
@@ -168,9 +173,9 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
                                 Log.d(TAG, "Eventos cargados: " + fetchedEvents.size());
                             } else {
                                 Toast.makeText(getContext(), "No hay eventos para este lugar.", Toast.LENGTH_SHORT).show();
-                                eventCardAdapter.setEvents(new ArrayList<>());
+                                eventCardAdapter.setEvents(new ArrayList<>()); // Limpiar la lista si no hay eventos
                                 rvEventsList.setVisibility(View.GONE);
-                                tvNoEventsMessage.setVisibility(View.VISIBLE);
+                                tvNoEventsMessage.setVisibility(View.VISIBLE); // Mostrar mensaje de "no hay eventos"
                                 Log.d(TAG, "No se encontraron eventos para el lugar: " + placeName);
                             }
                         } catch (JSONException e) {
@@ -191,7 +196,7 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
 
                         String errorMessage = "Error al cargar eventos.";
                         if (error.networkResponse != null) {
-                            errorMessage = "Error de red: " + error.networkResponse.statusCode;
+                            errorMessage = "Error de redess: " + error.networkResponse.statusCode;
                             try {
                                 String responseBody = new String(error.networkResponse.data, "utf-8");
                                 Log.e(TAG, "Cuerpo de error de la API (eventos): " + responseBody);
@@ -207,7 +212,7 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
                         }
                         Log.e(TAG, "Error al cargar eventos: " + errorMessage, error);
                         Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
-                        eventCardAdapter.setEvents(new ArrayList<>());
+                        eventCardAdapter.setEvents(new ArrayList<>()); // Limpiar la lista en caso de error
                     }
                 });
     }
@@ -216,6 +221,11 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
     public void onEventClick(Events event, int position) {
         Log.d(TAG, "Evento clicado: " + event.getNombre() + " en posición: " + position);
         Toast.makeText(getContext(), "Has hecho clic en el evento: " + event.getNombre(), Toast.LENGTH_SHORT).show();
+        // Aquí podrías navegar a un fragmento de detalles del evento, por ejemplo.
+        // Ejemplo:
+        // if (getActivity() instanceof MainActivity) {
+        //     ((MainActivity) getActivity()).showEventDetailFragment(event.getId());
+        // }
     }
 
     private String capitalize(String str) {

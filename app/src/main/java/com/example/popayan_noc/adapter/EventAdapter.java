@@ -44,11 +44,11 @@ import java.util.Scanner;
 
 
 public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHolder> {
-    private List<Evento> eventList; // ¡CAMBIO CLAVE: Ahora es List<Evento>!
+    private List<Evento> eventList;
     private Context context;
     private SparseArray<JSONArray> commentsCache = new SparseArray<>();
 
-    public EventAdapter(Context context, List<Evento> eventList) { // ¡CAMBIO CLAVE en el constructor!
+    public EventAdapter(Context context, List<Evento> eventList) {
         this.context = context;
         this.eventList = eventList;
     }
@@ -64,11 +64,10 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
         Evento evento = eventList.get(position); // Obtener un objeto Evento
 
-        // --- Cargar imagen del evento con Glide ---
-        // Asumiendo que el campo 'portada' en Evento es una lista de URLs y tomamos la primera
+
         String imageUrl = "";
         if (evento.getPortada() != null && !evento.getPortada().isEmpty()) {
-            imageUrl = evento.getPortada().get(0); // Tomamos la primera URL de la portada
+            imageUrl = evento.getPortada().get(0);
         }
 
         if (!imageUrl.isEmpty()) {
@@ -82,24 +81,20 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             holder.imgEvent.setImageResource(R.drawable.placeholder_img);
         }
 
-        // --- Actualizar TextViews con los datos del evento ---
         holder.tvEventTitle.setText(evento.getNombre());
 
-        // Formatear fecha y hora usando getFechaHora() del modelo Evento
         String dateTime = "";
         try {
             SimpleDateFormat sdfIn = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
-            Date date = sdfIn.parse(evento.getFechaHora().replace("Z", "")); // Eliminar 'Z' si está al final
+            Date date = sdfIn.parse(evento.getFechaHora().replace("Z", ""));
             SimpleDateFormat sdfDateOut = new SimpleDateFormat("dd MMM", Locale.getDefault());
-            SimpleDateFormat sdfTimeOut = new SimpleDateFormat("h:mm a", Locale.getDefault()); // Formato para la hora
+            SimpleDateFormat sdfTimeOut = new SimpleDateFormat("h:mm a", Locale.getDefault());
             dateTime = sdfDateOut.format(Objects.requireNonNull(date)) + " • " + sdfTimeOut.format(date);
         } catch (Exception e) {
-            dateTime = evento.getFechaHora(); // Usar la fecha tal cual si falla el formato
             Log.e("EventAdapter", "Error al parsear fecha de Evento: " + e.getMessage());
         }
         holder.tvEventDateTime.setText(dateTime);
 
-        // Si Evento tiene un Lugar asociado, obtenemos la dirección de Lugar
         if (evento.getLugar() != null) {
 
         } else {
@@ -107,8 +102,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         }
 
 
-        // --- Cargar comentarios existentes ---
-        final int eventId = evento.getId(); // Usar getId() del objeto Evento
+        final int eventId = evento.getId();
         if (eventId != -1) {
             JSONArray cachedComments = commentsCache.get(eventId);
             if (cachedComments != null) {
@@ -142,7 +136,6 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         }
 
 
-        // --- Botón Calificar ---
         holder.btnCalificar.setOnClickListener(v2 -> {
             if (eventId == -1) {
                 Toast.makeText(context, "ID de evento no válido para calificar.", Toast.LENGTH_SHORT).show();
@@ -213,7 +206,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             eventoInactivo = true;
         }
 
-        String fechaHoraEventoStr = evento.getFechaHora(); // Usa getFechaHora()
+        String fechaHoraEventoStr = evento.getFechaHora();
         boolean eventoPasado = false;
         if (fechaHoraEventoStr != null && !fechaHoraEventoStr.isEmpty()) {
             try {
