@@ -1,5 +1,5 @@
+// EventsApi.java
 package com.example.popayan_noc.service;
-
 
 import android.content.Context;
 
@@ -27,8 +27,8 @@ public class EventsApi {
      * @param errorListener Listener para errores.
      */
     public static void getEventosByLugares(Context context, String token, int lugarId,
-                                         Response.Listener<JSONObject> listener,
-                                         Response.ErrorListener errorListener) {
+                                           Response.Listener<JSONObject> listener,
+                                           Response.ErrorListener errorListener) {
         String url = BASE_URL + "/lugares/" + lugarId + "/eventos";
         RequestQueue queue = Volley.newRequestQueue(context);
 
@@ -42,5 +42,4 @@ public class EventsApi {
         };
         queue.add(request);
     }
-
 }

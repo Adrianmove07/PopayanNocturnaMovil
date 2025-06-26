@@ -1,3 +1,4 @@
+// EventsListFragment.java
 package com.example.popayan_noc.fragment;
 
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Button; // Import Button
 
 import com.android.volley.VolleyError;
 import com.example.popayan_noc.R;
@@ -26,8 +28,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors; // For Java 8 stream API (requires min API 24 or desugaring)
 
-public class EventsListFragment extends Fragment implements EventCardAdapter.OnEventClickListener {
+// Implement the new interface for the filter dialog
+public class EventsListFragment extends Fragment implements EventCardAdapter.OnEventClickListener,
+        PriceFilterDialogFragment.PriceFilterListener {
 
     private static final String TAG = "EventsListFragment";
     private static final String ARG_PLACE_ID = "place_id";
@@ -39,11 +44,14 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
     private TextView tvEventsTitle;
     private RecyclerView rvEventsList;
     private EventCardAdapter eventCardAdapter;
-    private List<Events> eventList;
+    private List<Events> eventList; // This list will hold the CURRENTLY DISPLAYED events (filtered)
+    private List<Events> allFetchedEvents; // This list will hold ALL events fetched from API (unfiltered)
     private ProgressBar progressBarEvents;
     private TextView tvNoEventsMessage;
+    private Button btnFilterEvents; // Add a button for filtering
 
     private String authToken;
+    private String currentPriceFilter = null; // Store the currently applied filter ("gratis", "economico", etc., or null for "todos")
 
     public EventsListFragment() {
         // Constructor público vacío requerido
@@ -68,8 +76,8 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
         } else {
             Log.e(TAG, "EventsListFragment started without place ID or name arguments.");
         }
-        // Obtén el token al inicio. Asegúrate de que AuthUtils.getToken(getContext()) no devuelva null o vacío.
         authToken = AuthUtils.getToken(getContext());
+        allFetchedEvents = new ArrayList<>(); // Initialize the unfiltered list
     }
 
     @Override
@@ -81,6 +89,7 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
         rvEventsList = view.findViewById(R.id.rvEventsList);
         progressBarEvents = view.findViewById(R.id.progressBarEvents);
         tvNoEventsMessage = view.findViewById(R.id.tvNoEventsMessage);
+        btnFilterEvents = view.findViewById(R.id.btnFilterEvents);
 
         if (placeName != null && !placeName.isEmpty()) {
             tvEventsTitle.setText("Eventos en " + capitalize(placeName));
@@ -88,24 +97,51 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
             tvEventsTitle.setText("Eventos");
         }
 
-        eventList = new ArrayList<>();
+        eventList = new ArrayList<>(); // This will be the list passed to the adapter
         rvEventsList.setLayoutManager(new LinearLayoutManager(getContext()));
         eventCardAdapter = new EventCardAdapter(getContext(), eventList, this);
         rvEventsList.setAdapter(eventCardAdapter);
 
-        // Llama a cargar eventos después de inicializar el adaptador
-        loadEventsByPlace(placeId);
+        // Set up the filter button click listener
+        btnFilterEvents.setOnClickListener(v -> showPriceFilterDialog());
+
+        // Initial load of all events
+        loadAllEventsFromApi(placeId);
 
         return view;
     }
 
-    private void loadEventsByPlace(int placeId) {
-        // Asegúrate de que el contexto y el token sean válidos antes de hacer la llamada.
+    private void showPriceFilterDialog() {
+        PriceFilterDialogFragment dialogFragment = new PriceFilterDialogFragment();
+        dialogFragment.setPriceFilterListener(this); // Set this fragment as the listener
+        dialogFragment.show(getParentFragmentManager(), "PriceFilterDialog");
+    }
+
+    @Override
+    public void onPriceFilterSelected(String priceRange) {
+        // This method is called when a price range is selected in the dialog
+        if ("todos".equals(priceRange)) {
+            currentPriceFilter = null; // Clear filter if "todos" is selected
+            Toast.makeText(getContext(), "Mostrando todos los eventos.", Toast.LENGTH_SHORT).show();
+        } else {
+            currentPriceFilter = priceRange;
+            Toast.makeText(getContext(), "Filtrando por: " + priceRange, Toast.LENGTH_SHORT).show();
+        }
+        // Apply the filter to the already fetched events and update the UI
+        applyCurrentFilter();
+    }
+
+
+    /**
+     * Fetches all events for a given place from the API.
+     * After fetching, it stores them in allFetchedEvents and then applies the current filter.
+     */
+    private void loadAllEventsFromApi(int placeId) {
         if (getContext() == null || authToken == null || authToken.isEmpty()) {
             Log.e(TAG, "Contexto nulo o token no válido. No se pueden cargar eventos.");
             Toast.makeText(getContext(), "Error: Token de autorización no disponible.", Toast.LENGTH_LONG).show();
             progressBarEvents.setVisibility(View.GONE);
-            tvNoEventsMessage.setVisibility(View.VISIBLE); // Mostrar mensaje si no hay token
+            tvNoEventsMessage.setVisibility(View.VISIBLE);
             return;
         }
 
@@ -113,15 +149,16 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
         rvEventsList.setVisibility(View.GONE);
         tvNoEventsMessage.setVisibility(View.GONE);
 
-        Log.d(TAG, "Cargando eventos para lugar ID: " + placeId + " con token: " + authToken);
+        Log.d(TAG, "Cargando TODOS los eventos para lugar ID: " + placeId + " con token: " + authToken);
 
+        // Call the API to get ALL events (no price filter here)
         EventsApi.getEventosByLugares(getContext(), authToken, placeId,
                 new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         progressBarEvents.setVisibility(View.GONE);
                         Log.d(TAG, "Respuesta de eventos: " + response.toString());
-                        List<Events> fetchedEvents = new ArrayList<>();
+                        allFetchedEvents.clear(); // Clear previous data
                         try {
                             JSONArray datosArray = response.getJSONArray("datos");
 
@@ -138,11 +175,10 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
                                     boolean estado = eventObject.getBoolean("estado");
                                     int usuarioid = eventObject.getInt("usuarioid");
 
-                                    // --- INICIO DE LA CORRECCIÓN PARA EL CAMPO 'portada' ---
                                     List<String> portadaUrls = new ArrayList<>();
                                     if (eventObject.has("portada") && !eventObject.isNull("portada")) {
-                                        Object portadaValue = eventObject.get("portada"); // <-- This line gets it as a generic Object
-                                        if (portadaValue instanceof JSONArray) { // <-- Then checks if it's a JSONArray
+                                        Object portadaValue = eventObject.get("portada");
+                                        if (portadaValue instanceof JSONArray) {
                                             JSONArray portadaJsonArray = (JSONArray) portadaValue;
                                             for (int j = 0; j < portadaJsonArray.length(); j++) {
                                                 String url = portadaJsonArray.getString(j);
@@ -150,40 +186,35 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
                                                     portadaUrls.add(url);
                                                 }
                                             }
-                                        } else if (portadaValue instanceof String) { // <-- And also tries to handle it as a String
-                                            // Manejar el caso si 'portada' es directamente un String (aunque el API actual lo envía como array)
+                                        } else if (portadaValue instanceof String) {
                                             String singleUrl = (String) portadaValue;
                                             if (singleUrl != null && !singleUrl.isEmpty()) {
                                                 portadaUrls.add(singleUrl);
                                             }
                                         }
                                     }
-// --- FIN DE LA CORRECCIÓN ---
 
                                     JSONObject lugarObj = eventObject.getJSONObject("lugar");
                                     int lugarIdAnidado = lugarObj.getInt("id");
                                     String lugarNombreAnidado = lugarObj.getString("nombre");
                                     Events.LugarSimple lugarSimple = new Events.LugarSimple(lugarIdAnidado, lugarNombreAnidado);
 
-                                    fetchedEvents.add(new Events(id, nombre, capacidad, precio, descripcion, fechaHora, estado, usuarioid, portadaUrls, lugarSimple));
+                                    allFetchedEvents.add(new Events(id, nombre, capacidad, precio, descripcion, fechaHora, estado, usuarioid, portadaUrls, lugarSimple));
                                 }
-                                eventCardAdapter.setEvents(fetchedEvents);
-                                rvEventsList.setVisibility(View.VISIBLE);
-                                tvNoEventsMessage.setVisibility(View.GONE);
-                                Log.d(TAG, "Eventos cargados: " + fetchedEvents.size());
+                                Log.d(TAG, "Total eventos obtenidos de la API (sin filtrar): " + allFetchedEvents.size());
+                                // Now, apply the current filter to the fetched events
+                                applyCurrentFilter();
                             } else {
                                 Toast.makeText(getContext(), "No hay eventos para este lugar.", Toast.LENGTH_SHORT).show();
-                                eventCardAdapter.setEvents(new ArrayList<>()); // Limpiar la lista si no hay eventos
-                                rvEventsList.setVisibility(View.GONE);
-                                tvNoEventsMessage.setVisibility(View.VISIBLE); // Mostrar mensaje de "no hay eventos"
+                                allFetchedEvents.clear(); // Ensure the unfiltered list is empty too
+                                applyCurrentFilter(); // This will clear the adapter and show no events message
                                 Log.d(TAG, "No se encontraron eventos para el lugar: " + placeName);
                             }
                         } catch (JSONException e) {
                             Log.e(TAG, "Error al parsear JSON de eventos: " + e.getMessage(), e);
                             Toast.makeText(getContext(), "Error al procesar datos de eventos.", Toast.LENGTH_SHORT).show();
-                            eventCardAdapter.setEvents(new ArrayList<>());
-                            rvEventsList.setVisibility(View.GONE);
-                            tvNoEventsMessage.setVisibility(View.VISIBLE);
+                            allFetchedEvents.clear();
+                            applyCurrentFilter();
                         }
                     }
                 },
@@ -193,10 +224,12 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
                         progressBarEvents.setVisibility(View.GONE);
                         rvEventsList.setVisibility(View.GONE);
                         tvNoEventsMessage.setVisibility(View.VISIBLE);
+                        allFetchedEvents.clear(); // Clear data on error
+                        applyCurrentFilter(); // Clear UI
 
                         String errorMessage = "Error al cargar eventos.";
                         if (error.networkResponse != null) {
-                            errorMessage = "Error de redess: " + error.networkResponse.statusCode;
+                            errorMessage = "Error de red: " + error.networkResponse.statusCode;
                             try {
                                 String responseBody = new String(error.networkResponse.data, "utf-8");
                                 Log.e(TAG, "Cuerpo de error de la API (eventos): " + responseBody);
@@ -212,10 +245,79 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
                         }
                         Log.e(TAG, "Error al cargar eventos: " + errorMessage, error);
                         Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
-                        eventCardAdapter.setEvents(new ArrayList<>()); // Limpiar la lista en caso de error
                     }
                 });
     }
+
+    /**
+     * Applies the current price filter to the allFetchedEvents list
+     * and updates the RecyclerView.
+     */
+    private void applyCurrentFilter() {
+        eventList.clear(); // Clear the list for the adapter
+
+        if (allFetchedEvents.isEmpty()) {
+            tvNoEventsMessage.setText("No se encontraron eventos disponibles.");
+            tvNoEventsMessage.setVisibility(View.VISIBLE);
+            rvEventsList.setVisibility(View.GONE);
+            eventCardAdapter.notifyDataSetChanged();
+            return;
+        }
+
+        if (currentPriceFilter == null || "todos".equalsIgnoreCase(currentPriceFilter)) {
+            // If no filter or "todos" selected, show all fetched events
+            eventList.addAll(allFetchedEvents);
+        } else {
+            // Apply the filter logic
+            for (Events event : allFetchedEvents) {
+                try {
+                    // It's crucial that event.getPrecio() can be parsed to a number.
+                    // If it contains "50.000", you need to clean it (e.g., remove dots)
+                    // before parsing. Assuming simple string numbers.
+                    float price = Float.parseFloat(event.getPrecio());
+
+                    boolean matchesFilter = false;
+                    switch (currentPriceFilter) {
+                        case "gratis":
+                            matchesFilter = (price == 0);
+                            break;
+                        case "economico":
+                            matchesFilter = (price >= 1 && price <= 50000);
+                            break;
+                        case "medio":
+                            matchesFilter = (price >= 50001 && price <= 150000);
+                            break;
+                        case "premium":
+                            matchesFilter = (price >= 150001);
+                            break;
+                        default:
+                            // Should not happen if dialog only offers valid options
+                            Log.w(TAG, "Filtro de precio desconocido: " + currentPriceFilter);
+                            break;
+                    }
+
+                    if (matchesFilter) {
+                        eventList.add(event);
+                    }
+                } catch (NumberFormatException e) {
+                    Log.e(TAG, "Error parsing event price '" + event.getPrecio() + "': " + e.getMessage());
+                    // Decide how to handle events with unparsable prices (e.g., skip them)
+                }
+            }
+        }
+
+        if (eventList.isEmpty()) {
+            tvNoEventsMessage.setText("No se encontraron eventos con el filtro de precio seleccionado.");
+            tvNoEventsMessage.setVisibility(View.VISIBLE);
+            rvEventsList.setVisibility(View.GONE);
+        } else {
+            tvNoEventsMessage.setVisibility(View.GONE);
+            rvEventsList.setVisibility(View.VISIBLE);
+        }
+        eventCardAdapter.notifyDataSetChanged();
+        Log.d(TAG, "Eventos filtrados y mostrados: " + eventList.size());
+    }
+
 
     @Override
     public void onEventClick(Events event, int position) {

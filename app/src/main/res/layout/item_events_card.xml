@@ -8,6 +8,7 @@
     android:layout_marginTop="8dp"
     android:layout_marginBottom="4dp"
     app:cardCornerRadius="8dp"
+    app:cardBackgroundColor="@color/gray_300"
     app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -112,7 +113,7 @@
             android:textColor="@color/black"
             android:maxLines="1"
             android:ellipsize="end"
-            app:drawableStartCompat="@drawable/ic_favorite"
+            app:drawableStartCompat="@drawable/money_24"
             app:layout_constraintTop_toBottomOf="@id/tvEventPlace"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
