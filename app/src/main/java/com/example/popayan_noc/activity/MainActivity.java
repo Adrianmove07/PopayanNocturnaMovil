@@ -27,6 +27,7 @@ import com.example.popayan_noc.R;
 import com.example.popayan_noc.fragment.ExploreFragment;
 import com.example.popayan_noc.fragment.FavoritesFragment;
 import com.example.popayan_noc.fragment.HomeFragment;
+import com.example.popayan_noc.fragment.TodayDoFragment;
 import com.example.popayan_noc.fragment.UserFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -129,6 +130,9 @@ public class MainActivity extends AppCompatActivity
         } else if (itemId == R.id.nav_user) {
             selectedFragment = new UserFragment();
             toolbarTitle = "Mi Perfil";
+        } else if (itemId == R.id.planea) {
+                selectedFragment = new TodayDoFragment();
+                toolbarTitle = "planea";
         } else if (itemId == R.id.nav_gallery) {
             Toast.makeText(this, "Navegando a Galería", Toast.LENGTH_SHORT).show();
         }

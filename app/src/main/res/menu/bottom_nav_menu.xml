@@ -16,4 +16,8 @@
         android:id="@+id/nav_user"
         android:icon="@drawable/ic_user"
         android:title="Usuario" />
+    <item
+        android:id="@+id/planea"
+        android:icon="@drawable/ic_map"
+        android:title="planea" />
 </menu>
