@@ -130,8 +130,8 @@ public class HomeFragment extends Fragment {
 
         tvRating.setText("4.9");
 
-        Button btnLogout = view.findViewById(R.id.btnLogout);
-        if (btnLogout != null) {
+        //Button btnLogout = view.findViewById(R.id.btnLogout);
+        /*if (btnLogout != null) {
             btnLogout.setOnClickListener(v -> {
                 SharedPreferences prefs = requireActivity().getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE);
                 prefs.edit().clear().apply();
@@ -140,7 +140,7 @@ public class HomeFragment extends Fragment {
                 startActivity(intent);
                 requireActivity().finish();
             });
-        }
+        }*/
 
         View fabMap = view.findViewById(R.id.fabMap);
         if (fabMap != null) {

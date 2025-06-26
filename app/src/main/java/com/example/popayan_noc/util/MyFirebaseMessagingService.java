@@ -25,7 +25,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
         Log.d(TAG, "Token FCM generado: " + token);
-        // Aquí puedes enviar el token a tu servidor si lo necesitas
     }
 
     @Override
@@ -69,7 +68,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
-        // Necesario para Android 8+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     channelId,
