@@ -43,6 +43,7 @@ public class PlacesListFragment extends Fragment implements PlaceCardAdapter.OnP
     private PlaceCardAdapter placeCardAdapter;
     private List<Place> placeList;
     private ProgressBar progressBarPlaces;
+    private TextView tvNoPlacesMessage; // Declare your TextView here
 
     private String authToken;
 
@@ -78,20 +79,22 @@ public class PlacesListFragment extends Fragment implements PlaceCardAdapter.OnP
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_places_list, container, false);
 
-        // Opcional: Si el token es nulo, puedes mostrar un mensaje o redirigir al login
         if (authToken == null) {
             Log.e(TAG, "Auth token is null in PlacesListFragment. User might not be logged in.");
             Toast.makeText(getContext(), "Sesión no iniciada. No se pueden cargar lugares.", Toast.LENGTH_LONG).show();
-            // Considera redirigir al usuario a la pantalla de login o mostrar un estado vacío
-            // return view;
+            // It's a good idea to show the "no places" message if no auth token.
+            // However, the loadPlacesByCategory method already handles this by showing a Toast.
+            // You might want to explicitly show tvNoPlacesMessage here too.
         }
+
 
         tvCategoryPlacesTitle = view.findViewById(R.id.tvCategoryPlacesTitle);
         rvPlacesList = view.findViewById(R.id.rvPlacesList);
         progressBarPlaces = view.findViewById(R.id.progressBarPlaces);
+        tvNoPlacesMessage = view.findViewById(R.id.tvNoPlacesMessage); // Initialize your TextView here
 
         if (categoryName != null && !categoryName.isEmpty()) {
-            tvCategoryPlacesTitle.setText("Lugares en " + capitalize(categoryName));
+            tvCategoryPlacesTitle.setText("Lugares disponibles de " + capitalize(categoryName)); // Corrected typo
         } else {
             tvCategoryPlacesTitle.setText("Lugares");
         }
@@ -107,16 +110,18 @@ public class PlacesListFragment extends Fragment implements PlaceCardAdapter.OnP
     }
 
     private void loadPlacesByCategory(int catId) {
-        // La validación del token ahora es más efectiva
         if (getContext() == null || authToken == null || authToken.isEmpty()) {
             Log.e(TAG, "Contexto nulo o token no válido. No se pueden cargar lugares.");
             Toast.makeText(getContext(), "Error: Token de autorización no disponible.", Toast.LENGTH_LONG).show();
             progressBarPlaces.setVisibility(View.GONE);
+            rvPlacesList.setVisibility(View.GONE); // Hide RecyclerView
+            tvNoPlacesMessage.setVisibility(View.VISIBLE); // Show the "no places" message
             return;
         }
 
         progressBarPlaces.setVisibility(View.VISIBLE);
-        rvPlacesList.setVisibility(View.GONE);
+        rvPlacesList.setVisibility(View.GONE); // Hide list while loading
+        tvNoPlacesMessage.setVisibility(View.GONE); // Hide message while loading
 
         Log.d(TAG, "Cargando lugares para categoría ID: " + catId);
 
@@ -125,9 +130,7 @@ public class PlacesListFragment extends Fragment implements PlaceCardAdapter.OnP
                     @Override
                     public void onResponse(JSONObject response) {
                         progressBarPlaces.setVisibility(View.GONE);
-                        rvPlacesList.setVisibility(View.VISIBLE);
 
-                        Log.d(TAG, "Respuesta de lugares: " + response.toString());
                         List<Place> fetchedPlaces = new ArrayList<>();
                         try {
                             String mensaje = response.getString("mensaje");
@@ -159,16 +162,22 @@ public class PlacesListFragment extends Fragment implements PlaceCardAdapter.OnP
                                     fetchedPlaces.add(new Place(id, nombre, descripcion, ubicacion, imagen, categoriaid, lugarCategoria, fotos_lugar));
                                 }
                                 placeCardAdapter.setPlaces(fetchedPlaces);
+                                rvPlacesList.setVisibility(View.VISIBLE); // Show RecyclerView
+                                tvNoPlacesMessage.setVisibility(View.GONE); // Hide message
                                 Log.d(TAG, "Lugares cargados: " + fetchedPlaces.size());
                             } else {
                                 Toast.makeText(getContext(), "No hay lugares para esta categoría.", Toast.LENGTH_SHORT).show();
                                 placeCardAdapter.setPlaces(new ArrayList<>());
+                                rvPlacesList.setVisibility(View.GONE); // Hide RecyclerView
+                                tvNoPlacesMessage.setVisibility(View.VISIBLE); // Show no places message
                                 Log.d(TAG, "No se encontraron lugares para la categoría: " + categoryName);
                             }
                         } catch (JSONException e) {
                             Log.e(TAG, "Error al parsear JSON de lugares: " + e.getMessage());
                             Toast.makeText(getContext(), "Error al procesar datos de lugares.", Toast.LENGTH_SHORT).show();
                             placeCardAdapter.setPlaces(new ArrayList<>());
+                            rvPlacesList.setVisibility(View.GONE); // Hide RecyclerView
+                            tvNoPlacesMessage.setVisibility(View.VISIBLE); // Show message on error parsing
                         }
                     }
                 },
@@ -176,7 +185,8 @@ public class PlacesListFragment extends Fragment implements PlaceCardAdapter.OnP
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         progressBarPlaces.setVisibility(View.GONE);
-                        rvPlacesList.setVisibility(View.GONE);
+                        rvPlacesList.setVisibility(View.GONE); // Hide RecyclerView on error
+                        tvNoPlacesMessage.setVisibility(View.VISIBLE); // Show no places message on error
 
                         String errorMessage = "Error al cargar lugares.";
                         if (error.networkResponse != null) {
@@ -206,19 +216,13 @@ public class PlacesListFragment extends Fragment implements PlaceCardAdapter.OnP
         Log.d(TAG, "Lugar clicado: " + place.getNombre() + " en posición: " + position);
         Toast.makeText(getContext(), "Cargando eventos para: " + place.getNombre(), Toast.LENGTH_SHORT).show();
 
-        // **** ESTA ES LA SECCIÓN CRUCIAL PARA NAVEGAR A EventsListFragment ****
-        // 1. Crea una nueva instancia de EventsListFragment usando el método de fábrica.
-        //    Le pasamos el ID y el nombre del lugar para que EventsListFragment sepa qué eventos cargar.
         EventsListFragment eventsFragment = EventsListFragment.newInstance(place.getId(), place.getNombre());
 
-        // 2. Realiza la transacción de fragmentos.
-        //    Esto reemplaza el fragmento actual (PlacesListFragment) con el nuevo (EventsListFragment).
-        //    Asegúrate de que R.id.fragment_container sea el ID correcto de tu FrameLayout o FragmentContainerView en tu MainActivity.
         if (getActivity() != null) {
             getActivity().getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, eventsFragment) // Reemplaza el fragmento actual
-                    .addToBackStack(null) // Permite al usuario volver a PlacesListFragment con el botón "Atrás"
-                    .commit(); // Confirma y ejecuta la transacción
+                    .replace(R.id.fragment_container, eventsFragment)
+                    .addToBackStack(null) //
+                    .commit();
         } else {
             Log.e(TAG, "Error: getActivity() es nulo. No se pudo reemplazar el fragmento.");
         }

@@ -34,10 +34,9 @@ public class TodayDoFragment extends Fragment implements CategoryAdapter.OnCateg
     private List<Categoria> categoryList;
     private TextView tvTitleTodayDo;
 
-    private String authToken; // <-- Ahora declaramos la variable sin inicializarla aquí
+    private String authToken;
 
     public TodayDoFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -45,17 +44,13 @@ public class TodayDoFragment extends Fragment implements CategoryAdapter.OnCateg
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_today_do, container, false);
 
-        // Inicializa el token llamando a AuthUtils.getToken()
-        // Esto debe hacerse después de que getContext() esté disponible (en onCreateView o onAttach)
-        authToken = AuthUtils.getToken(getContext()); // <-- ¡Aquí obtenemos el token!
 
-        // Opcional: Si el token es nulo, puedes mostrar un mensaje o redirigir al login
+        authToken = AuthUtils.getToken(getContext());
+
         if (authToken == null) {
             Log.e(TAG, "Auth token is null. User might not be logged in.");
-            // Considera redirigir al usuario a la pantalla de login aquí
             Toast.makeText(getContext(), "Sesión no iniciada. Por favor, inicia sesión.", Toast.LENGTH_LONG).show();
-            // Evita cargar categorías si no hay token
-            // return view; // O maneja el caso de forma adecuada
+
         }
 
 

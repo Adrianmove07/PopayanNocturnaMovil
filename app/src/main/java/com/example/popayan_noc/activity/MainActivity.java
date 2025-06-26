@@ -124,15 +124,12 @@ public class MainActivity extends AppCompatActivity
         } else if (itemId == R.id.nav_explore) {
             selectedFragment = new ExploreFragment();
             toolbarTitle = "Explorar";
-        } else if (itemId == R.id.nav_favorites) {
-            selectedFragment = new FavoritesFragment();
-            toolbarTitle = "Favoritos";
         } else if (itemId == R.id.nav_user) {
             selectedFragment = new UserFragment();
             toolbarTitle = "Mi Perfil";
         } else if (itemId == R.id.planea) {
                 selectedFragment = new TodayDoFragment();
-                toolbarTitle = "planea";
+                toolbarTitle = "planear";
         } else if (itemId == R.id.nav_gallery) {
             Toast.makeText(this, "Navegando a Galería", Toast.LENGTH_SHORT).show();
         }
