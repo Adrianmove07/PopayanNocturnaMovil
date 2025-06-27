@@ -14,7 +14,9 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Button; // Import Button
+import android.widget.Button;
+import android.widget.NumberPicker;
+import android.widget.LinearLayout;
 
 import com.android.volley.VolleyError;
 import com.example.popayan_noc.R;
@@ -28,7 +30,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors; // For Java 8 stream API (requires min API 24 or desugaring)
 
 // Implement the new interface for the filter dialog
 public class EventsListFragment extends Fragment implements EventCardAdapter.OnEventClickListener,
@@ -323,12 +324,9 @@ public class EventsListFragment extends Fragment implements EventCardAdapter.OnE
     public void onEventClick(Events event, int position) {
         Log.d(TAG, "Evento clicado: " + event.getNombre() + " en posición: " + position);
         Toast.makeText(getContext(), "Has hecho clic en el evento: " + event.getNombre(), Toast.LENGTH_SHORT).show();
-        // Aquí podrías navegar a un fragmento de detalles del evento, por ejemplo.
-        // Ejemplo:
-        // if (getActivity() instanceof MainActivity) {
-        //     ((MainActivity) getActivity()).showEventDetailFragment(event.getId());
-        // }
+
     }
+
 
     private String capitalize(String str) {
         if (str == null || str.isEmpty()) return "";

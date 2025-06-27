@@ -8,13 +8,14 @@
         android:id="@+id/nav_explore"
         android:icon="@drawable/ic_explore"
         android:title="Explorar" />
+    <item
+        android:id="@+id/planea"
+        android:icon="@drawable/planificacion"
+        android:title="planea" />
 
     <item
         android:id="@+id/nav_user"
         android:icon="@drawable/ic_user"
         android:title="Usuario" />
-    <item
-        android:id="@+id/planea"
-        android:icon="@drawable/planificacion"
-        android:title="planea" />
+
 </menu>
