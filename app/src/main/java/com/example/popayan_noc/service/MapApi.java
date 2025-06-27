@@ -11,7 +11,7 @@ import org.json.JSONArray;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapApi {
+public class    MapApi {
     private static final String BASE_URL = "https://popnocturna.vercel.app/api";
 
     public static void getLugares(Context context, String token, Response.Listener<JSONArray> listener, Response.ErrorListener errorListener) {

@@ -17,11 +17,11 @@ import java.util.List;
 import com.example.popayan_noc.R;
 import com.example.popayan_noc.fragment.ImageGalleryDialogFragment;
 import com.example.popayan_noc.fragment.PlaceDetailFragment;
-import com.example.popayan_noc.model.Lugar; // Import the new Lugar model
+import com.example.popayan_noc.model.Lugar;
 import android.content.Intent;
 import android.net.Uri;
 import android.graphics.Color;
-import android.widget.Toast; // Asegurarse que Toast está importado
+import android.widget.Toast;
 
 
 public class PlaceAdapter extends RecyclerView.Adapter<PlaceAdapter.PlaceViewHolder> {

@@ -142,10 +142,10 @@ public class HomeFragment extends Fragment {
             });
         }*/
 
-        View fabMap = view.findViewById(R.id.fabMap);
+       /* View fabMap = view.findViewById(R.id.fabMap);
         if (fabMap != null) {
             fabMap.setOnClickListener(v -> mostrarDialogoMapa());
-        }
+        }*/
         return view;
     }
 

@@ -27,6 +27,7 @@ import com.example.popayan_noc.R;
 import com.example.popayan_noc.fragment.ExploreFragment;
 import com.example.popayan_noc.fragment.FavoritesFragment;
 import com.example.popayan_noc.fragment.HomeFragment;
+import com.example.popayan_noc.fragment.NotificationsFragment;
 import com.example.popayan_noc.fragment.UserFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -105,13 +106,24 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_notifications) {
-            // Manejar clic en notificaciones
-            Toast.makeText(this, "Notificaciones", Toast.LENGTH_SHORT).show();
+            // Abrir NotificationsFragment
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.slide_in_right, R.anim.slide_out_left,
+                            R.anim.slide_in_right, R.anim.slide_out_left
+                    )
+                    .replace(R.id.fragment_container, new NotificationsFragment())
+                    .addToBackStack(null)
+                    .commit();
+
+            setToolbarTitle("Notificaciones");
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
     private boolean handleFragmentNavigation(int itemId, int sourceNavId) {
         Fragment selectedFragment = null;
