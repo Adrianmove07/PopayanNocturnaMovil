@@ -12,6 +12,7 @@
         android:layout_height="0dp"
         android:padding="16dp"
         tools:listitem="@layout/item_notification"
+        android:background="@drawable/bg_gradient_dark"
         android:clipToPadding="false"
         android:scrollbars="vertical"
         app:layout_constraintTop_toTopOf="parent"

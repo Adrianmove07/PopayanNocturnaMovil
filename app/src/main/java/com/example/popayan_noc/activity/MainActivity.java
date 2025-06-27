@@ -24,6 +24,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.popayan_noc.R;
+import com.example.popayan_noc.fragment.ColaboradorDialogFragment;
 import com.example.popayan_noc.fragment.ExploreFragment;
 import com.example.popayan_noc.fragment.FavoritesFragment;
 import com.example.popayan_noc.fragment.HomeFragment;
@@ -224,8 +225,20 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
+
+        if (id == R.id.nav_gallery) {
+            // Mostrar el modal
+            ColaboradorDialogFragment dialog = new ColaboradorDialogFragment();
+            dialog.show(getSupportFragmentManager(), "ColaboradorDialog");
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        }
+
+        // Para otros ítems del menú
         boolean handled = handleFragmentNavigation(id, R.id.nav_view);
         drawerLayout.closeDrawer(GravityCompat.START);
         return handled;
     }
+
 }

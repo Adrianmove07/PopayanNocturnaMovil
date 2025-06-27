@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true"
+    android:background="@android:color/transparent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp"
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:background="@drawable/bg_modal_rounded"
+        android:elevation="8dp">
+
+        <ViewFlipper
+            android:id="@+id/viewFlipper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- Página 0: Políticas -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Políticas para ser colaborador"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:paddingBottom="12dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="1. Cumple las normas.\n2. Sé activo.\n3. Comparte contenido relevante.\n4. Respeta a la comunidad."
+                    android:textSize="16sp"
+                    android:paddingBottom="20dp" />
+
+                <Button
+                    android:id="@+id/btnContinuar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Acepto y continuar" />
+            </LinearLayout>
+
+            <!-- Página 1: Formulario -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Conviértete en colaborador"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:paddingBottom="12dp" />
+
+                <EditText
+                    android:id="@+id/etDescripcion"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Escribe por qué quieres ser colaborador"
+                    android:minHeight="100dp"
+                    android:gravity="top|start"
+                    android:background="@android:drawable/edit_text"
+                    android:padding="12dp"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btnEnviarSolicitud"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Enviar solicitud"
+                    android:layout_marginTop="20dp" />
+            </LinearLayout>
+
+            <!-- Página 2: Solicitud existente -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Solicitud enviada"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:paddingBottom="12dp" />
+
+                <TextView
+                    android:id="@+id/tvEstadoSolicitud"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Estado: ..."
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:paddingBottom="8dp" />
+
+                <TextView
+                    android:id="@+id/tvDescripcionSolicitud"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Descripción..."
+                    android:textSize="16sp"
+                    android:paddingBottom="20dp" />
+
+                <Button
+                    android:id="@+id/btnEditarSolicitud"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Editar" />
+
+                <Button
+                    android:id="@+id/btnEliminarSolicitud"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Eliminar"
+                    android:layout_marginTop="10dp" />
+            </LinearLayout>
+        </ViewFlipper>
+    </LinearLayout>
+</ScrollView>
