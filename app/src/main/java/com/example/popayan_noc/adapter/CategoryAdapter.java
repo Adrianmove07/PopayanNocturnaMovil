@@ -48,7 +48,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
         Categoria category = categoryList.get(position);
 
-        // Nombre de categoría
         String nombreCategoria = (category.getTipo() != null && !category.getTipo().trim().isEmpty())
                 ? capitalize(category.getTipo()) : "Categoría";
         holder.tvCategoryName.setText(nombreCategoria);
@@ -56,10 +55,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         holder.tvCategoryName.setTextColor(Color.parseColor("#000000"));
         holder.tvCategoryName.setGravity(Gravity.CENTER);
 
-        // Log de imagen
         Log.d("CategoryAdapter", "Category: " + category.getTipo() + ", Image URL: " + category.getImagen());
 
-        // Imagen de categoría con Glide
         if (category.getImagen() != null && !category.getImagen().isEmpty()) {
             Glide.with(context)
                     .load(category.getImagen())
@@ -70,12 +67,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
                             .centerCrop())
                     .into(holder.imgCategoryIcon);
         } else {
-            // Imagen por defecto
             setDefaultIcon(holder.imgCategoryIcon, category.getTipo());
             Log.w("CategoryAdapter", "No image URL for category: " + category.getTipo() + ". Using default icon.");
         }
 
-        // Click listener
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onCategoryClick(category, holder.getAdapterPosition());

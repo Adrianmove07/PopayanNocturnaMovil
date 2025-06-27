@@ -114,8 +114,8 @@ public class EventApi {
                         Log.e("EventApi", "Error al leer el cuerpo del error: " + e.getMessage());
                     }
                 } else {
-                    Log.e("EventApi", "Error de red: " + error.getMessage());
-                    errorMessage = "Error de red: " + error.getMessage();
+                    Log.e("EventApi", "Error de redetts: " + error.getMessage());
+                    errorMessage = "Error de red09: " + error.getMessage();
                 }
                 errorListener.onErrorResponse(new VolleyError(errorMessage));
             }) {

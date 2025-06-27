@@ -1,6 +1,5 @@
 package com.example.popayan_noc.fragment;
 
-
 import android.Manifest; // Importar para permisos de ubicación
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager; // Import for FragmentManager
+import androidx.fragment.app.FragmentTransaction; // Import for FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -63,7 +64,7 @@ public class HomeFragment extends Fragment {
     private EventAdapter eventAdapter;
 
     private List<Lugar> lugaresList = new ArrayList<>();
-    private List<Evento> eventList = new ArrayList<>(); // ¡Ahora es List<Evento>!
+    private List<Evento> eventList = new ArrayList<>();
 
     private TextView tvLugaresCount;
     private TextView tvEventosCount;
@@ -108,10 +109,18 @@ public class HomeFragment extends Fragment {
                     llEventsSection.setVisibility(View.VISIBLE);
                     llPlacesSection.setVisibility(View.GONE);
                     cargarEventos();
-                } else { // Pestaña "Lugares" seleccionada
+                } else if (tab.getPosition() == 1) { // Pestaña "Lugares" seleccionada
                     llEventsSection.setVisibility(View.GONE);
                     llPlacesSection.setVisibility(View.VISIBLE);
                     cargarLugares();
+                } else if (tab.getPosition() == 2) { // Pestaña "Planea con nosotros" seleccionada
+                    // Navigate to TodayDoFragment
+                    if (getParentFragmentManager() != null) {
+                        getParentFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container, new TodayDoFragment()) // Assuming R.id.fragment_container is where your fragments are displayed
+                                .addToBackStack(null) // Optional: Allows going back to HomeFragment
+                                .commit();
+                    }
                 }
             }
 
@@ -122,6 +131,8 @@ public class HomeFragment extends Fragment {
             public void onTabReselected(TabLayout.Tab tab) { /* No-op */ }
         });
 
+        // Set initial tab selection
+        tabLayoutMainSelection.getTabAt(0).select(); // Select "Eventos" initially
         llEventsSection.setVisibility(View.VISIBLE);
         llPlacesSection.setVisibility(View.GONE);
 
@@ -130,19 +141,7 @@ public class HomeFragment extends Fragment {
 
         tvRating.setText("4.9");
 
-        //Button btnLogout = view.findViewById(R.id.btnLogout);
-        /*if (btnLogout != null) {
-            btnLogout.setOnClickListener(v -> {
-                SharedPreferences prefs = requireActivity().getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE);
-                prefs.edit().clear().apply();
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                requireActivity().finish();
-            });
-        }*/
-
-       /* View fabMap = view.findViewById(R.id.fabMap);
+        /*View fabMap = view.findViewById(R.id.fabMap);
         if (fabMap != null) {
             fabMap.setOnClickListener(v -> mostrarDialogoMapa());
         }*/
@@ -275,8 +274,6 @@ public class HomeFragment extends Fragment {
                                         }
 
                                     }
-
-
                                     evento.setLugar(lugar);
                                 }
                                 evento.setEstado(eventJson.optString("estado")); // Estado del evento
@@ -325,7 +322,7 @@ public class HomeFragment extends Fragment {
     private void actualizarMarcadoresMapa(org.osmdroid.views.MapView mapView, org.osmdroid.api.IMapController mapController) {
         mapView.getOverlays().clear();
         for (Lugar lugar : lugaresList) {
-
+            // Your existing logic for adding markers to the map
         }
         mapView.invalidate();
     }
