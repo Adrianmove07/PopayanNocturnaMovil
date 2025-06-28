@@ -1,129 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="@android:color/transparent">
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="24dp"
-        android:padding="20dp"
-        android:orientation="vertical"
-        android:background="@drawable/bg_modal_rounded"
-        android:elevation="8dp">
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginVertical="48dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="12dp"
+        app:cardBackgroundColor="@color/white">
 
-        <ViewFlipper
-            android:id="@+id/viewFlipper"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="32dp">
 
-            <!-- Página 0: Políticas -->
-            <LinearLayout
+            <ViewFlipper
+                android:id="@+id/viewFlipper"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Políticas para ser colaborador"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:paddingBottom="12dp" />
+                    android:orientation="vertical">
 
-                <TextView
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Políticas para ser colaborador"
+                        android:textAppearance="?attr/textAppearanceHeadline4"
+                        android:textColor="@color/amber"
+                        android:layout_marginBottom="20dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="1. Cumple las normas.\n2. Sé activo.\n3. Comparte contenido relevante.\n4. Respeta a la comunidad."
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:textColor="@color/black"
+                        android:lineSpacingExtra="4dp"
+                        android:layout_marginBottom="32dp" />
+
+                    <Button
+                        android:id="@+id/btnContinuar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Acepto y continuar"
+                        android:textAppearance="?attr/textAppearanceButton"
+                        android:backgroundTint="@color/amber"
+                        android:textColor="@color/black"
+                        android:minHeight="56dp"
+                        app:cornerRadius="8dp" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="1. Cumple las normas.\n2. Sé activo.\n3. Comparte contenido relevante.\n4. Respeta a la comunidad."
-                    android:textSize="16sp"
-                    android:paddingBottom="20dp" />
+                    android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/btnContinuar"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Conviértete en colaborador"
+                        android:textAppearance="?attr/textAppearanceHeadline4"
+                        android:textColor="@color/amber"
+                        android:layout_marginBottom="20dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:boxCornerRadiusBottomEnd="8dp"
+                        app:boxCornerRadiusBottomStart="8dp"
+                        app:boxCornerRadiusTopEnd="8dp"
+                        app:boxCornerRadiusTopStart="8dp"
+                        app:boxStrokeColor="@color/amber"
+                        app:hintTextColor="@color/black">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDescripcion"
+                            android:layout_width="match_parent"
+                            android:layout_height="160dp"
+                            android:hint="Escribe por qué quieres ser colaborador"
+                            android:gravity="top|start"
+                            android:inputType="textMultiLine"
+                            android:lines="6"
+                            android:textColor="@color/black"
+                            android:textColorHint="@color/light_gray_2" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/btnEnviarSolicitud"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Enviar solicitud"
+                        android:textAppearance="?attr/textAppearanceButton"
+                        android:backgroundTint="@color/amber"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="32dp"
+                        android:minHeight="56dp"
+                        app:cornerRadius="8dp" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Acepto y continuar" />
-            </LinearLayout>
+                    android:orientation="vertical">
 
-            <!-- Página 1: Formulario -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Solicitud enviada"
+                        android:textAppearance="?attr/textAppearanceHeadline4"
+                        android:textColor="@color/amber"
+                        android:layout_marginBottom="20dp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Conviértete en colaborador"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:paddingBottom="12dp" />
+                    <TextView
+                        android:id="@+id/tvEstadoSolicitud"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Estado: Pendiente de revisión"
+                        android:textAppearance="?attr/textAppearanceSubtitle1"
+                        android:textColor="@color/black"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp" />
 
-                <EditText
-                    android:id="@+id/etDescripcion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Escribe por qué quieres ser colaborador"
-                    android:minHeight="100dp"
-                    android:gravity="top|start"
-                    android:background="@android:drawable/edit_text"
-                    android:padding="12dp"
-                    android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/tvDescripcionSolicitud"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Su solicitud está siendo procesada. Le notificaremos cualquier actualización."
+                        android:textAppearance="?attr/textAppearanceBody1"
+                        android:textColor="@color/black"
+                        android:lineSpacingExtra="4dp"
+                        android:layout_marginBottom="32dp" />
 
-                <Button
-                    android:id="@+id/btnEnviarSolicitud"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Enviar solicitud"
-                    android:layout_marginTop="20dp" />
-            </LinearLayout>
+                    <Button
+                        android:id="@+id/btnEditarSolicitud"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Editar"
+                        android:textAppearance="?attr/textAppearanceButton"
+                        android:backgroundTint="@color/amber"
+                        android:textColor="@color/black"
+                        android:minHeight="56dp"
+                        app:cornerRadius="8dp" />
 
-            <!-- Página 2: Solicitud existente -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Solicitud enviada"
-                    android:textStyle="bold"
-                    android:textSize="20sp"
-                    android:paddingBottom="12dp" />
-
-                <TextView
-                    android:id="@+id/tvEstadoSolicitud"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Estado: ..."
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:paddingBottom="8dp" />
-
-                <TextView
-                    android:id="@+id/tvDescripcionSolicitud"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Descripción..."
-                    android:textSize="16sp"
-                    android:paddingBottom="20dp" />
-
-                <Button
-                    android:id="@+id/btnEditarSolicitud"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Editar" />
-
-                <Button
-                    android:id="@+id/btnEliminarSolicitud"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Eliminar"
-                    android:layout_marginTop="10dp" />
-            </LinearLayout>
-        </ViewFlipper>
-    </LinearLayout>
+                    <Button
+                        android:id="@+id/btnEliminarSolicitud"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Eliminar"
+                        android:textAppearance="?attr/textAppearanceButton"
+                        android:backgroundTint="@color/black"
+                        android:textColor="@color/white"
+                        android:layout_marginTop="16dp"
+                        android:minHeight="56dp"
+                        app:cornerRadius="8dp" />
+                </LinearLayout>
+            </ViewFlipper>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </ScrollView>
