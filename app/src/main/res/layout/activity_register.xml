@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:text="Registro"
             android:textSize="24sp"
-            android:textColor="#F6F6F6"
+            android:textColor="@color/dark_blue"
             android:textStyle="bold"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"/>
@@ -36,8 +36,8 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:hint="Nombre completo"
-            android:backgroundTint="@color/gray_300"
-            android:textColor="#F6F6F6"
+            android:textColorHint="#000"
+            android:textColor="#000"
             android:paddingStart="12dp"
             android:layout_marginBottom="14dp"
             android:background="@drawable/rounded_edittext_bg_dark"/>
@@ -46,9 +46,9 @@
             android:id="@+id/etLastName"
             android:layout_width="match_parent"
             android:layout_height="48dp"
+            android:textColorHint="#000"
             android:hint="Apellido(s)"
-            android:backgroundTint="@color/gray_300"
-            android:textColor="#F6F6F6"
+            android:textColor="@color/dark_blue"
             android:paddingStart="12dp"
             android:layout_marginBottom="14dp"
             android:background="@drawable/rounded_edittext_bg_dark"/>
@@ -59,9 +59,9 @@
             android:layout_height="48dp"
             android:hint="Fecha de nacimiento"
             android:focusable="false"
+            android:textColorHint="#000"
             android:clickable="true"
-            android:backgroundTint="@color/gray_300"
-            android:textColor="#F6F6F6"
+            android:textColor="@color/dark_blue"
             android:paddingStart="12dp"
             android:layout_marginBottom="14dp"
             android:background="@drawable/rounded_edittext_bg_dark"/>
@@ -71,8 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginBottom="14dp"
-            android:backgroundTint="@color/gray_300"
-            android:popupBackground="@color/gray_300"
+            android:textColorHint="#000"
             />
 
         <EditText
@@ -81,8 +80,8 @@
             android:layout_height="48dp"
             android:hint="Correo electrónico"
             android:inputType="textEmailAddress"
-            android:backgroundTint="@color/gray_300"
-            android:textColor="#F6F6F6"
+            android:textColor="@color/dark_blue"
+            android:textColorHint="#000"
             android:paddingStart="12dp"
             android:layout_marginBottom="14dp"
             android:background="@drawable/rounded_edittext_bg_dark"/>
@@ -93,9 +92,9 @@
             android:layout_height="48dp"
             android:hint="Contraseña"
             android:inputType="textPassword"
-            android:backgroundTint="@color/gray_300"
-            android:textColor="#F6F6F6"
+            android:textColor="@color/dark_blue"
             android:paddingStart="12dp"
+            android:textColorHint="#000"
             android:layout_marginBottom="14dp"
             android:background="@drawable/rounded_edittext_bg_dark"/>
 
