@@ -31,7 +31,8 @@
             android:layout_height="wrap_content"
             android:text="Confirmar"
             android:layout_marginEnd="8dp"
-            android:backgroundTint="@color/primary"/>
+            android:backgroundTint="@color/amber"
+            android:textColor="@color/black"/>
 
         <Button
             android:id="@+id/btnCancelar"

@@ -3,5 +3,11 @@
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryTextColor</item>
         <item name="colorAccent">@color/secondaryTextColor</item>
+
+
+    </style>
+    <style name="CustomRatingBar" parent="Widget.AppCompat.RatingBar">
+        <item name="colorControlActivated">@color/amber</item> <!-- Color de estrellas llenas -->
+        <item name="colorControlNormal">@color/secondaryTextColor</item> <!-- Color de estrellas vacías -->
     </style>
 </resources>
