@@ -29,6 +29,7 @@ import com.example.popayan_noc.fragment.ExploreFragment;
 import com.example.popayan_noc.fragment.FavoritesFragment;
 import com.example.popayan_noc.fragment.HomeFragment;
 import com.example.popayan_noc.fragment.NotificationsFragment;
+import com.example.popayan_noc.fragment.ReservationsFragment;
 import com.example.popayan_noc.fragment.TodayDoFragment;
 import com.example.popayan_noc.fragment.UserFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -227,15 +228,31 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_gallery) {
-            // Mostrar el modal
             ColaboradorDialogFragment dialog = new ColaboradorDialogFragment();
             dialog.show(getSupportFragmentManager(), "ColaboradorDialog");
-
             drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         }
 
-        // Para otros ítems del menú
+        if (id == R.id.nav_reservas) {
+            // Reemplazar el fragmento actual con ReservationsFragment
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left,
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left
+                    )
+                    .replace(R.id.fragment_container, new ReservationsFragment())
+                    .addToBackStack(null)
+                    .commit();
+
+            setToolbarTitle("Mis Reservas");
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
+        }
+
         boolean handled = handleFragmentNavigation(id, R.id.nav_view);
         drawerLayout.closeDrawer(GravityCompat.START);
         return handled;

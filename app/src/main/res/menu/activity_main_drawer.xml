@@ -10,9 +10,9 @@
             android:title="Home" />
 
         <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_user"
-            android:title="Perfil" />
+            android:id="@+id/nav_reservas"
+            android:icon="@drawable/outline_book_4_24"
+            android:title="Mis reservas" />
         <item
 
             android:id="@+id/nav_gallery"
