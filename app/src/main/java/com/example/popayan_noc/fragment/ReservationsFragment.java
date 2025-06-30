@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,6 +40,8 @@ public class ReservationsFragment extends Fragment {
     private ProgressBar progressBar;
     private ReservationsAdapter reservationsAdapter;
     private List<Reserva> pendingReservationsList;
+    private TextView tvEmptyMessage;
+
 
     public ReservationsFragment() {
     }
@@ -50,6 +53,7 @@ public class ReservationsFragment extends Fragment {
 
         recyclerViewReservations = view.findViewById(R.id.recyclerViewReservations);
         progressBar = view.findViewById(R.id.progressBar);
+        tvEmptyMessage = view.findViewById(R.id.tvEmptyMessage);
 
         recyclerViewReservations.setLayoutManager(new LinearLayoutManager(getContext()));
         pendingReservationsList = new ArrayList<>();
@@ -78,11 +82,13 @@ public class ReservationsFragment extends Fragment {
     private void fetchAllUserReservationsAndFilter() {
         progressBar.setVisibility(View.VISIBLE);
         recyclerViewReservations.setVisibility(View.GONE);
+        tvEmptyMessage.setVisibility(View.GONE); // Ocultar mensaje al iniciar
 
         Context context = getContext();
         if (context == null) {
             Log.e(TAG, "Contexto es nulo, no se puede realizar la llamada a la API.");
             progressBar.setVisibility(View.GONE);
+            tvEmptyMessage.setVisibility(View.VISIBLE); // Mostrar mensaje si no hay contexto
             return;
         }
 
@@ -91,7 +97,6 @@ public class ReservationsFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         progressBar.setVisibility(View.GONE);
-                        recyclerViewReservations.setVisibility(View.VISIBLE);
 
                         Log.d(TAG, "Respuesta de la API para todas las reservas: " + response.toString());
 
@@ -100,26 +105,31 @@ public class ReservationsFragment extends Fragment {
 
                         if (reservaResponse != null && reservaResponse.isOk()) {
                             List<Reserva> allReservations = reservaResponse.getReservas();
-                            if (allReservations != null && !allReservations.isEmpty()) {
-                                pendingReservationsList.clear();
+                            pendingReservationsList.clear();
 
+                            if (allReservations != null) {
                                 for (Reserva reserva : allReservations) {
                                     if ("Pendiente".equalsIgnoreCase(reserva.getAprobacion())) {
                                         pendingReservationsList.add(reserva);
                                     }
                                 }
+                            }
 
-                                if (!pendingReservationsList.isEmpty()) {
-                                    reservationsAdapter.notifyDataSetChanged();
-                                    Toast.makeText(context, "Reservas pendientes cargadas en Popayán.", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(context, "No se encontraron reservas pendientes para este usuario.", Toast.LENGTH_SHORT).show();
-                                }
+                            if (pendingReservationsList.isEmpty()) {
+                                // No hay reservas pendientes
+                                recyclerViewReservations.setVisibility(View.GONE);
+                                tvEmptyMessage.setVisibility(View.VISIBLE);
                             } else {
-                                Toast.makeText(context, "No se encontraron reservas para este usuario.", Toast.LENGTH_SHORT).show();
+                                // Hay reservas pendientes
+                                recyclerViewReservations.setVisibility(View.VISIBLE);
+                                tvEmptyMessage.setVisibility(View.GONE);
+                                reservationsAdapter.notifyDataSetChanged();
                             }
                         } else {
-                            Toast.makeText(context, "La respuesta de la API indica un problema al obtener las reservas.", Toast.LENGTH_LONG).show();
+                            // Error en la respuesta
+                            recyclerViewReservations.setVisibility(View.GONE);
+                            tvEmptyMessage.setVisibility(View.VISIBLE);
+                            tvEmptyMessage.setText("Error al obtener reservas");
                         }
                     }
                 },
@@ -127,10 +137,11 @@ public class ReservationsFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         progressBar.setVisibility(View.GONE);
-                        recyclerViewReservations.setVisibility(View.VISIBLE);
+                        recyclerViewReservations.setVisibility(View.GONE);
+                        tvEmptyMessage.setVisibility(View.VISIBLE);
+                        tvEmptyMessage.setText("Error al cargar reservas");
 
                         Log.e(TAG, "Error de la API al obtener todas las reservas: " + error.toString());
-                        Toast.makeText(context, "Error al obtener reservas: " + error.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
