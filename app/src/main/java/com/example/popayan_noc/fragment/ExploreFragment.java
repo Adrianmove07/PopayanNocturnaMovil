@@ -143,12 +143,12 @@ public class ExploreFragment extends Fragment {
         });
 
         // Ir a eventos próximos
-        CardView cardEventosProximos = view.findViewById(R.id.cardEventosProximos);
+      /*  CardView cardEventosProximos = view.findViewById(R.id.cardEventosProximos);
         cardEventosProximos.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), EventosProximosActivity.class);
             startActivity(intent);
         });
-
+      */
         return view;
     }
 
