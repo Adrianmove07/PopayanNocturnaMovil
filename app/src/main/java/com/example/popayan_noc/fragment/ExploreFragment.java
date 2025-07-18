@@ -148,7 +148,7 @@ public class ExploreFragment extends Fragment {
             Intent intent = new Intent(getActivity(), EventosProximosActivity.class);
             startActivity(intent);
         });
-      */
+         */
         return view;
     }
 

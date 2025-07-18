@@ -4,9 +4,7 @@
     android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_gradient_dark"
-
-    >
+    android:background="@drawable/bg_gradient_dark">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -14,44 +12,52 @@
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:orientation="vertical">
 
+                <!-- Título de calificaciones -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Calificaciones de Eventos"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:layout_marginBottom="8dp"/>
+                    android:textColor="@android:color/white"
+                    android:layout_marginBottom="8dp" />
 
+                <!-- Lista de calificaciones -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvRatings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_marginBottom="16dp" />
 
+                <!-- Título de comentarios -->
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Comentarios de Eventos"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:layout_marginBottom="8dp"/>
+                    android:textColor="@android:color/white"
+                    android:layout_marginBottom="8dp" />
 
+                <!-- Lista de comentarios -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvComments"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:nestedScrollingEnabled="false"
-                    android:layout_marginBottom="16dp"/>
+                    android:layout_marginBottom="16dp" />
 
+                <!-- Botón para cargar más comentarios -->
                 <Button
                     android:id="@+id/btnLoadMore"
                     android:layout_width="match_parent"
@@ -61,12 +67,11 @@
                     android:background="@drawable/button_background"
                     android:textColor="@android:color/white"
                     android:padding="12dp"
-                    android:visibility="gone"/>
-
+                    android:visibility="gone" />
             </LinearLayout>
-
         </androidx.core.widget.NestedScrollView>
 
+        <!-- Botón flotante para escribir comentario -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fabWriteComment"
             android:layout_width="wrap_content"
@@ -74,8 +79,6 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="16dp"
             android:contentDescription="Escribir comentario"
-            app:srcCompat="@drawable/ic_comments"/>
-
+            app:srcCompat="@drawable/ic_comments" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

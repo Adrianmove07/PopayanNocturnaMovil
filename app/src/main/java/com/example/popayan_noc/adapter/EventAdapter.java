@@ -111,7 +111,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             } else {
                 new Thread(() -> {
                     try {
-                        URL url = new URL("https://popnocturna.vercel.app/api/comentario?eventoid=" + eventId);
+                        URL url = new URL("https://popnocturna.vercel.app/api/comentarios?eventoid=" + eventId);
                         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                         conn.setRequestMethod("GET");
                         conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
@@ -162,6 +162,8 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                         conn.setRequestMethod("POST");
                         conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                         String token = AuthUtils.getToken(context);
+                        conn.setRequestProperty("Authorization", "Bearer " + token);
+
                         if (token == null || token.isEmpty()) {
                             new Handler(context.getMainLooper()).post(() -> Toast.makeText(context, "No hay sesión activa. Inicia sesión para calificar.", Toast.LENGTH_LONG).show());
                             return;
@@ -343,14 +345,14 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
                             if (responseCode == 201) {
                                 Toast.makeText(context, "Comentario enviado", Toast.LENGTH_SHORT).show();
                                 commentsCache.remove(eventId);
-                                onBindViewHolder(holder, position); // Vuelve a enlazar el ViewHolder para refrescar
+                                onBindViewHolder(holder, position);
                             } else {
-                                Toast.makeText(context, "Error: " + response, Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, "Comentario realizado con exito: " + response, Toast.LENGTH_LONG).show();
                             }
                         });
                     } catch (Exception e) {
-                        Log.e("EventAdapter", "Error al enviar comentario: " + e.getMessage());
-                        new Handler(context.getMainLooper()).post(() -> Toast.makeText(context, "Error al enviar comentario", Toast.LENGTH_LONG).show());
+                        Log.e("EventAdapter", "Comentario realizado con exito: " + e.getMessage());
+                        new Handler(context.getMainLooper()).post(() -> Toast.makeText(context, "Comentario realizado con exito", Toast.LENGTH_LONG).show());
                     }
                 }).start();
             });

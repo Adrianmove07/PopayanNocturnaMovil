@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -16,16 +18,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.popayan_noc.service.EventApi;
 import com.example.popayan_noc.R;
-import com.example.popayan_noc.adapter.CommentsAdapter;
+import com.example.popayan_noc.adapter.CommentAdapter; // <-- Usa tu adaptador correcto aquí
 import com.example.popayan_noc.adapter.RatingsAdapter;
+import com.example.popayan_noc.service.EventApi;
 import com.example.popayan_noc.util.AuthUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.util.ArrayList;
 
-import org.json.JSONObject;
 import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class EventReviewsFragment extends Fragment {
     private static final String BASE_URL = "https://popnocturna.vercel.app/api";
@@ -34,7 +37,7 @@ public class EventReviewsFragment extends Fragment {
     private FloatingActionButton fabWriteComment;
     private Button btnLoadMore;
     private int lugarId;
-    private CommentsAdapter commentsAdapter;
+    private CommentAdapter commentsAdapter; // ← Tipo correcto
     private RatingsAdapter ratingsAdapter;
     private ArrayList<JSONObject> allComments = new ArrayList<>();
     private ArrayList<JSONObject> allRatings = new ArrayList<>();
@@ -54,55 +57,37 @@ public class EventReviewsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_event_reviews, container, false);
 
-        // Inicializar vistas
         rvRatings = view.findViewById(R.id.rvRatings);
         rvComments = view.findViewById(R.id.rvComments);
         swipeRefresh = view.findViewById(R.id.swipeRefresh);
         fabWriteComment = view.findViewById(R.id.fabWriteComment);
         btnLoadMore = view.findViewById(R.id.btnLoadMore);
 
-        // Inicializar y configurar RecyclerViews
-        commentsAdapter = new CommentsAdapter();
+        // Adaptadores
+        commentsAdapter = new CommentAdapter(getContext(), new JSONArray()); // ← Instancia válida
         ratingsAdapter = new RatingsAdapter();
-        
+
         rvRatings.setLayoutManager(new LinearLayoutManager(getContext()));
         rvComments.setLayoutManager(new LinearLayoutManager(getContext()));
         rvRatings.setAdapter(ratingsAdapter);
         rvComments.setAdapter(commentsAdapter);
 
-        // Configurar SwipeRefreshLayout
         swipeRefresh.setOnRefreshListener(this::loadEventReviews);
-        
-        // Configurar botones
+
         fabWriteComment.setOnClickListener(v -> showWriteCommentDialog());
         btnLoadMore.setOnClickListener(v -> loadMoreComments());
-        // Configurar FAB
-        fabWriteComment.setOnClickListener(v -> {
-            // Abrir diálogo para escribir comentario
-            View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_comment, null);
-            EditText etComment = dialogView.findViewById(R.id.etComment);
-            new AlertDialog.Builder(getContext())
-                    .setView(dialogView)
-                    .setCancelable(false)
-                    .create()
-                    .show();
-        });
 
-        // Cargar datos iniciales
         loadEventReviews();
-
         return view;
     }
 
     private void loadEventReviews() {
-        // Obtener el token de autenticación
         String token = AuthUtils.getToken(getContext());
         if (token == null || token.isEmpty()) {
             Toast.makeText(getContext(), "No hay sesión iniciada", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Obtener eventos del lugar
         EventApi.getEventosByLugar(getContext(), token, lugarId, response -> {
             try {
                 totalEvents = response.length();
@@ -110,14 +95,10 @@ public class EventReviewsFragment extends Fragment {
                 allComments.clear();
                 allRatings.clear();
 
-                // Obtener comentarios y calificaciones de cada evento
                 for (int i = 0; i < response.length(); i++) {
                     JSONObject event = response.getJSONObject(i);
                     int eventId = event.getInt("id");
-                    
-                    // Obtener comentarios del evento
                     getEventComments(eventId, token);
-                    // Obtener calificaciones del evento
                     getEventRatings(eventId, token);
                 }
             } catch (Exception e) {
@@ -132,7 +113,9 @@ public class EventReviewsFragment extends Fragment {
         EventApi.getEventComments(getContext(), token, eventId, response -> {
             try {
                 for (int i = 0; i < response.length(); i++) {
-                    allComments.add(response.getJSONObject(i));
+                    JSONObject comment = response.getJSONObject(i);
+                    allComments.add(comment);
+                    Log.d("COMMENT_DEBUG", "Comentario recibido: " + comment.toString());
                 }
                 loadedEvents++;
                 if (loadedEvents >= totalEvents) {
@@ -164,22 +147,9 @@ public class EventReviewsFragment extends Fragment {
         });
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        // No necesitamos hacer nada aquí ya que todo se inicializa en onCreateView
-    }
-
     private void updateCommentsRecyclerView(JSONArray comments) {
-        ArrayList<JSONObject> commentList = new ArrayList<>();
-        for (int i = 0; i < comments.length(); i++) {
-            try {
-                commentList.add(comments.getJSONObject(i));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        commentsAdapter.setComments(commentList);
+        commentsAdapter = new CommentAdapter(getContext(), comments); // ← Nueva instancia con nuevos datos
+        rvComments.setAdapter(commentsAdapter);
         swipeRefresh.setRefreshing(false);
     }
 
@@ -200,7 +170,7 @@ public class EventReviewsFragment extends Fragment {
         View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_comment, null);
         EditText etComment = dialogView.findViewById(R.id.etComment);
         TextView tvCharCount = dialogView.findViewById(R.id.tvCharCount);
-        
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setView(dialogView)
                 .setTitle("Escribe tu comentario")
@@ -214,24 +184,22 @@ public class EventReviewsFragment extends Fragment {
                     }
                 })
                 .setNegativeButton("Cancelar", null);
-        
+
         AlertDialog dialog = builder.create();
         dialog.show();
     }
 
     private void loadMoreComments() {
-        // Aquí iría la lógica para cargar más comentarios
         Toast.makeText(getContext(), "Cargando más comentarios...", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // Limpiar referencias
         rvRatings = null;
         rvComments = null;
         swipeRefresh = null;
         fabWriteComment = null;
         btnLoadMore = null;
     }
-} // Fin de la clase EventReviewsFragment
+}
