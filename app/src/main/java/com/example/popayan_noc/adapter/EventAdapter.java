@@ -111,7 +111,7 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             } else {
                 new Thread(() -> {
                     try {
-                        URL url = new URL("https://popnocturna.vercel.app/api/comentarios?eventoid=" + eventId);
+                        URL url = new URL("https://popnocturna.vercel.app/api/comentarios/evento/" + eventId);
                         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                         conn.setRequestMethod("GET");
                         conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");

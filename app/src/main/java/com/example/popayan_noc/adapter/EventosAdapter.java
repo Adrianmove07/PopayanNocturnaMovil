@@ -1,6 +1,7 @@
 package com.example.popayan_noc.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,16 +92,19 @@ public class EventosAdapter extends RecyclerView.Adapter<EventosAdapter.EventoVi
         } else {
             new Thread(() -> {
                 try {
-                    URL url = new URL("https://popnocturna.vercel.app/api/comentario?eventoid=" + eventId);
+                    String token = AuthUtils.getToken(context);
+                    URL url = new URL("https://popnocturna.vercel.app/api/comentarios/evento/" + eventId);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
                     conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                    conn.setRequestProperty("Authorization", token);
                     InputStream is = conn.getInputStream();
                     Scanner s = new Scanner(is).useDelimiter("\\A");
                     String response = s.hasNext() ? s.next() : "";
                     is.close();
                     conn.disconnect();
                     JSONArray comentarios = new JSONArray(response);
+
                     commentsCache.put(eventId, comentarios);
                     android.os.Handler mainHandler = new android.os.Handler(context.getMainLooper());
                     mainHandler.post(() -> {
@@ -109,7 +113,7 @@ public class EventosAdapter extends RecyclerView.Adapter<EventosAdapter.EventoVi
                         holder.rvComments.setVisibility(View.VISIBLE);
                     });
                 } catch (Exception e) {
-                    // No mostrar nada si falla
+                    Log.d("COMMENT_DEBUG", "Error comentario:" + e);
                 }
             }).start();
         }
@@ -231,7 +235,7 @@ public class EventosAdapter extends RecyclerView.Adapter<EventosAdapter.EventoVi
                                 // Cargar comentarios nuevamente
                                 new Thread(() -> {
                                     try {
-                                        URL urlComments = new URL("https://popnocturna.vercel.app/api/comentario?eventoid=" + eventId);
+                                        URL urlComments = new URL("https://popnocturna.vercel.app/api/comentarios/evento" + eventId);
                                         HttpURLConnection connComments = (HttpURLConnection) urlComments.openConnection();
                                         connComments.setRequestMethod("GET");
                                         connComments.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
