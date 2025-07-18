@@ -131,7 +131,18 @@
                             android:textColor="@android:color/black"
                             android:textSize="16sp" />
 
-
+                        <Button
+                            android:id="@+id/btnReservar"
+                            android:layout_width="0dp"
+                            android:layout_height="52dp"
+                            android:layout_margin="8dp"
+                            android:layout_weight="1"
+                            android:backgroundTint="@color/amber"
+                            android:padding="12dp"
+                            android:text="Reservar"
+                            android:textAllCaps="false"
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp" />
 
                     </LinearLayout>
 
